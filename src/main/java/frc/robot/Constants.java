@@ -216,6 +216,10 @@ public final class Constants {
     public static final RobotDeviceId FLYWHEEL_LEADER = new RobotDeviceId(3, CANBuses.RIO, 8);
     public static final RobotDeviceId FLYWHEEL_FOLLOWER = new RobotDeviceId(4, CANBuses.RIO, 9);
 
+    //intake
+    public static final RobotDeviceId Intake = new RobotDeviceId(26, CANBuses.RIO, 10);
+   
+
     /* BEAM BREAK and/or LIMIT SWITCH DIO CHANNELS */
     // This is where digital I/O feedback devices are defined
     // Example:
@@ -365,6 +369,36 @@ public final class Constants {
   // public static class Mechanism1Constants {}
   // public static class Mechanism2Constants {}
   // ...
+  public static final class IntakeConstants{
+     // Mechanism idle mode
+    public static final MotorIdleMode kIntakeIdleMode = MotorIdleMode.COAST; // BRAKE, COAST
+
+    // Mechanism motor gear ratio
+    public static final double kIntakeGearRatio = 1.5;
+
+    // Intake motor open-loop and closed-loop ramp periods for current smoothing
+    //   Time from from 0 -> full duty
+    public static final double kIntakeClosedLoopRampPeriod = 0.15; // seconds
+    public static final double kIntakeOpenLoopRampPeriod = 0.25; // seconds
+
+    // MODE == REAL / REPLAY
+    // Feedforward constants
+    public static final double kSreal = 0.1;
+    public static final double kVreal = 0.05;
+    public static final double kAreal = 0.0;
+    // Feedback (PID) constants
+    public static final double kPreal = 1.0;
+    public static final double kDreal = 0.0;
+
+    // MODE == SIM
+    // Feedforward constants
+    public static final double kSsim = 0.0;
+    public static final double kVsim = 0.03;
+    public static final double kAsim = 0.0;
+    // Feedback (PID) constants
+    public static final double kPsim = 0.0;
+    public static final double kDsim = 0.0;
+  }
 
   /************************************************************************* */
   /** (Semi-)Autonomous Action Constants *********************************** */
@@ -455,10 +489,10 @@ public final class Constants {
       new CameraConfig(
           "camera_0",
           new Transform3d(
-              Inches.of(-13.0),
-              Inches.of(13.0),
-              Inches.of(12.0),
-              new Rotation3d(0.0, 0.0, Math.PI / 2)),
+              Inches.of(4.5),
+              Inches.of(-14.85),
+              Inches.of(25),
+              new Rotation3d(Math.toRadians(0.0), Math.toRadians(-16), Math.toRadians(-180))),
           1.0,
           new SimCameraProperties() {
             {
@@ -473,10 +507,10 @@ public final class Constants {
       new CameraConfig(
           "camera_1",
           new Transform3d(
-              Inches.of(-13.0),
-              Inches.of(-13.0),
-              Inches.of(12.0),
-              new Rotation3d(0.0, 0.0, -Math.PI / 2)),
+              Inches.of(4.5),
+              Inches.of(14.9),
+              Inches.of(21),
+              new Rotation3d(Math.toRadians(-6), Math.toRadians(6), 0.0)),
           1.0,
           new SimCameraProperties() {
             {

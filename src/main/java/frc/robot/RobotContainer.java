@@ -237,10 +237,12 @@ public class RobotContainer {
         break;
     }
 
+    // NamedCommands.registerCommand("drive to pose", new AutopilotCommands(m_drivebase, new
+    // Pose2d(1.115, 5.945, 180)));
+
     // Init all CAN busses specified in the `Constants.CANBuses` class
     RBSICANBusRegistry.initReal(Constants.CANBuses.ALL);
     canHealth = Arrays.stream(Constants.CANBuses.ALL).map(RBSICANHealth::new).toList();
-
     // In addition to the initial battery capacity from the Dashbaord, ``RBSIPowerMonitor`` takes
     // all the non-drivebase subsystems for which you wish to have power monitoring; DO NOT
     // include ``m_drivebase``, as that is automatically monitored.
