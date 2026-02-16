@@ -18,6 +18,8 @@
 package frc.robot;
 
 import com.revrobotics.util.StatusLogger;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
@@ -156,6 +158,14 @@ public class Robot extends LoggedRobot {
     Logger.recordOutput("Loop/Virtual_ms", (t2 - t1) / 1e6);
     Logger.recordOutput("Loop/Scheduler_ms", (t3 - t2) / 1e6);
     Logger.recordOutput("Loop/ThreadRestore_ms", (t4 - t3) / 1e6);
+
+    Logger.recordOutput(
+        "FirstComponentPoses",
+        new Pose3d[] {new Pose3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0.0, 0.0))});
+
+    Logger.recordOutput(
+        "SecondComponentPoses",
+        new Pose3d[] {new Pose3d(0.0, 0.0, 0.0, new Rotation3d(0.0, 0.0, 0.0))});
   }
 
   /** This function is called once when the robot is disabled. */
