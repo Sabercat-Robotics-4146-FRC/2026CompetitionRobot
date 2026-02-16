@@ -489,10 +489,10 @@ public final class Constants {
       new CameraConfig(
           "camera_0",
           new Transform3d(
-              Inches.of(4.5),
+              Inches.of(-4.5),
               Inches.of(-14.85),
               Inches.of(25),
-              new Rotation3d(Math.toRadians(0.0), Math.toRadians(-16), Math.toRadians(-180))),
+              new Rotation3d(Math.toRadians(0.0), Math.toRadians(-16.9), Math.toRadians(180))),
           1.0,
           new SimCameraProperties() {
             {
@@ -507,10 +507,10 @@ public final class Constants {
       new CameraConfig(
           "camera_1",
           new Transform3d(
-              Inches.of(4.5),
-              Inches.of(14.9),
-              Inches.of(21),
-              new Rotation3d(Math.toRadians(-6), Math.toRadians(6), 0.0)),
+              Inches.of(-3.0),
+              Inches.of(15),
+              Inches.of(22.25),
+              new Rotation3d(Math.toRadians(-5), Math.toRadians(7), 0.0)),
           1.0,
           new SimCameraProperties() {
             {
