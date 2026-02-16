@@ -46,18 +46,18 @@ public class IntakeIOTalonFX implements IntakeIO{
     config.CurrentLimits.SupplyCurrentLimit = PowerConstants.kMotorPortMaxCurrent; 
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
     config.MotorOutput.NeutralMode =
-        switch (Constants.kIntakeIdleMode) {
+        switch (IntakeConstants.kIntakeIdleMode) {
           case COAST -> NeutralModeValue.Coast;
           case BRAKE -> NeutralModeValue.Brake;
         };
     OpenLoopRampsConfigs openRamps = new OpenLoopRampsConfigs();
-    openRamps.DutyCycleOpenLoopRampPeriod = kIntakeOpenLoopRampPeriod;
-    openRamps.VoltageOpenLoopRampPeriod = kIntakeOpenLoopRampPeriod;
-    openRamps.TorqueOpenLoopRampPeriod = kIntakeOpenLoopRampPeriod;
+    openRamps.DutyCycleOpenLoopRampPeriod = IntakeConstants.kIntakeOpenLoopRampPeriod;
+    openRamps.VoltageOpenLoopRampPeriod = IntakeConstants.kIntakeOpenLoopRampPeriod;
+    openRamps.TorqueOpenLoopRampPeriod = IntakeConstants.kIntakeOpenLoopRampPeriod;
     ClosedLoopRampsConfigs closedRamps = new ClosedLoopRampsConfigs();
-    closedRamps.DutyCycleClosedLoopRampPeriod = kIntakeClosedLoopRampPeriod;
-    closedRamps.VoltageClosedLoopRampPeriod = kIntakeClosedLoopRampPeriod;
-    closedRamps.TorqueClosedLoopRampPeriod = kIntakeClosedLoopRampPeriod;
+    closedRamps.DutyCycleClosedLoopRampPeriod = IntakeConstants.kIntakeClosedLoopRampPeriod;
+    closedRamps.VoltageClosedLoopRampPeriod = IntakeConstants.kIntakeClosedLoopRampPeriod;
+    closedRamps.TorqueClosedLoopRampPeriod = IntakeConstants.kIntakeClosedLoopRampPeriod;
 
     // Apply the open- and closed-loop ramp configuration for current smoothing
     config.withClosedLoopRamps(closedRamps).withOpenLoopRamps(openRamps);
@@ -78,13 +78,13 @@ public class IntakeIOTalonFX implements IntakeIO{
 
 
   @Override
-  public void updateInputs(FlywheelIOInputs inputs) {
+  public void updateInputs(IntakeIOInputs inputs) {
     BaseStatusSignal.refreshAll(
         position, velocity, appliedVolts, current);
     inputs.positionRad =
-        Units.rotationsToRadians(position.getValueAsDouble()) / kIntakeGearRatio;
+        Units.rotationsToRadians(position.getValueAsDouble()) / IntakeConstants.kIntakeGearRatio;
     inputs.velocityRadPerSec =
-        Units.rotationsToRadians(velocity.getValueAsDouble()) / kIntakeGearRatio;
+        Units.rotationsToRadians(velocity.getValueAsDouble()) / IntakeConstants.kIntakeGearRatio;
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
     inputs.currentAmps =
         new double[] {current.getValueAsDouble()};
