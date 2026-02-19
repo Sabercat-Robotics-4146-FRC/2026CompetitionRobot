@@ -216,16 +216,9 @@ public final class Constants {
     public static final RobotDeviceId FLYWHEEL_LEADER = new RobotDeviceId(3, CANBuses.RIO, 8);
     public static final RobotDeviceId FLYWHEEL_FOLLOWER = new RobotDeviceId(4, CANBuses.RIO, 9);
 
-    /* BEAM BREAK and/or LIMIT SWITCH DIO CHANNELS */
-    // This is where digital I/O feedback devices are defined
-    // Example:
-    // public static final int ELEVATOR_BOTTOM_LIMIT = 3;
+    
 
-    /* LINEAR SERVO PWM CHANNELS */
-    // This is where PWM-controlled devices (actuators, servos, pneumatics, etc.)
-    // are defined
-    // Example:
-    // public static final int INTAKE_SERVO = 0;
+    public static final int LEDSTRIP_PWM = 0;  //first LED strip 
   }
 
   /************************************************************************* */
