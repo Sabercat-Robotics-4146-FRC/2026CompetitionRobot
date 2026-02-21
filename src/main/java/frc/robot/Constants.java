@@ -256,6 +256,8 @@ public final class Constants {
     // TODO: power port
     public static final RobotDeviceId TURRET = new RobotDeviceId(21, CANBuses.DRIVE, 10);
 
+    public static final RobotDeviceId Shooter = new RobotDeviceId(22, CANBuses.RIO, 10);
+
     /* BEAM BREAK and/or LIMIT SWITCH DIO CHANNELS */
     // This is where digital I/O feedback devices are defined
     // Example:
