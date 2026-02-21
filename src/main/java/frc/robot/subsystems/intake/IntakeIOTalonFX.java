@@ -1,11 +1,13 @@
 package frc.robot.subsystems.intake;
 import static frc.robot.Constants.RobotDevices.*;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -13,6 +15,9 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -27,17 +32,21 @@ import frc.robot.util.RBSIEnum.CTREPro;
 
 public class IntakeIOTalonFX implements IntakeIO{
 
-  private final TalonFX motor = 
-  new TalonFX(Intake.getDeviceNumber(), Intake.getCANBus());
+  private final TalonFX roller = 
+  new TalonFX(IntakeRoller.getDeviceNumber(), IntakeRoller.getCANBus());
+
+  private final SparkMax extender = new SparkMax(IntakeExtender.getDeviceNumber(), MotorType.kBrushed);
+
+  private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
 
   public final int[] powerPorts = {
-    Intake.getPowerPort()
+    IntakeRoller.getPowerPort(),
+    IntakeExtender.getPowerPort()
   };
 
-   private final StatusSignal<Angle> position = motor.getPosition();
-  private final StatusSignal<AngularVelocity> velocity = motor.getVelocity();
-  private final StatusSignal<Voltage> appliedVolts = motor.getMotorVoltage();
-  private final StatusSignal<Current> current = motor.getSupplyCurrent();
+  private final StatusSignal<AngularVelocity> velocity = roller.getVelocity();
+  private final StatusSignal<Voltage> appliedVolts = roller.getMotorVoltage();
+  private final StatusSignal<Current> current = roller.getSupplyCurrent();
   
   private final TalonFXConfiguration config = new TalonFXConfiguration();
   private final boolean isCTREPro = Constants.getPhoenixPro() == CTREPro.LICENSED;
@@ -67,16 +76,18 @@ public class IntakeIOTalonFX implements IntakeIO{
         400; // Target acceleration of 400 rps/s (0.25 seconds to max)
     motionMagicConfigs.MotionMagicJerk = 4000; // Target jerk of 4000 rps/s/s (0.1 seconds)
 
+    /* 
     // Apply the configurations to the flywheel motors
     PhoenixUtil.tryUntilOk(5, () -> motor.getConfigurator().apply(config, 0.25));
     // If follower rotates in the opposite direction, set "MotorAlignmentValue" to Opposed
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         50.0, position, velocity, appliedVolts, current);
-    motor.optimizeBusUtilization();
+    motor.optimizeBusUtilization();*/
   }
 
 
+  /* 
   @Override
   public void updateInputs(IntakeIOInputs inputs) {
     BaseStatusSignal.refreshAll(
@@ -88,75 +99,31 @@ public class IntakeIOTalonFX implements IntakeIO{
     inputs.appliedVolts = appliedVolts.getValueAsDouble();
     inputs.currentAmps =
         new double[] {current.getValueAsDouble()};
+  }*/
+
+  @Override
+  public void setPercentOutputExtender(double percent) {
+    extender.set(percent);
   }
 
   @Override
-  public void setVoltage(double volts) {
-    final MotionMagicVoltage m_request = new MotionMagicVoltage(volts);
-    m_request.withEnableFOC(isCTREPro);
-    motor.setControl(m_request);
+  public void setPercentOutputRoller(double percent) {
+    roller.setControl(dutyCycleOut.withOutput(percent));
   }
 
   @Override
-  public void setVelocity(double velocityRadPerSec) {
-    // create a Motion Magic Velocity request, voltage output
-    final MotionMagicVelocityVoltage m_request = new MotionMagicVelocityVoltage(0);
-    m_request.withEnableFOC(isCTREPro);
-    motor.setControl(m_request.withVelocity(Units.radiansToRotations(velocityRadPerSec)));
+  public void stopExtender() {
+    extender.set(0);
   }
 
   @Override
-  public void setPercent(double percent) {
-    // create a Motion Magic DutyCycle request, voltage output
-    final MotionMagicDutyCycle m_request = new MotionMagicDutyCycle(percent);
-    m_request.withEnableFOC(isCTREPro);
-    motor.setControl(m_request);
+  public void stopRoller() {
+    roller.stopMotor();
   }
 
   @Override
-  public void stop() {
-    motor.stopMotor();
-  }
-
-  /**
-   * Set the gains of the Slot0 closed-loop configuration
-   *
-   * @param kP Proportional gain
-   * @param kI Integral gain
-   * @param kD Differential gain
-   * @param kS Static gain
-   * @param kV Velocity gain
-   */
-  @Override
-  public void configureGains(double kP, double kI, double kD, double kS, double kV) {
-    config.Slot0.kP = kP;
-    config.Slot0.kI = kI;
-    config.Slot0.kD = kD;
-    config.Slot0.kS = kS;
-    config.Slot0.kV = kV;
-    config.Slot0.kA = 0.0;
-    PhoenixUtil.tryUntilOk(5, () -> motor.getConfigurator().apply(config, 0.25));
-  }
-
-  /**
-   * Set the gains of the Slot0 closed-loop configuration
-   *
-   * @param kP Proportional gain
-   * @param kI Integral gain
-   * @param kD Differential gain
-   * @param kS Static gain
-   * @param kV Velocity gain
-   * @param kA Acceleration gain
-   */
-  @Override
-  public void configureGains(double kP, double kI, double kD, double kS, double kV, double kA) {
-    config.Slot0.kP = kP;
-    config.Slot0.kI = kI;
-    config.Slot0.kD = kD;
-    config.Slot0.kS = kS;
-    config.Slot0.kV = kV;
-    config.Slot0.kA = kA;
-    PhoenixUtil.tryUntilOk(5, () -> motor.getConfigurator().apply(config, 0.25));
+  public void setMode() {
+    roller.setNeutralMode(NeutralModeValue.Coast);
   }
 }
 
