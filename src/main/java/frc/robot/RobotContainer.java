@@ -37,11 +37,14 @@ import frc.robot.Constants.Cameras;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AutopilotCommands;
+import frc.robot.commands.ClimbCommands.ClimbCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PivotCommand;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.StopIntake;
 import frc.robot.subsystems.accelerometer.Accelerometer;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveConstants;
 import frc.robot.subsystems.flywheel_example.Flywheel;
@@ -104,6 +107,8 @@ public class RobotContainer {
   private final Turret m_Turret;
 
   // ... Add additional subsystems here (e.g., elevator, arm, etc.)
+
+  private final Climb m_climb;
 
   // These are "Virtual Subsystems" that report information but have no motors
   private final Imu m_imu;
@@ -194,6 +199,7 @@ public class RobotContainer {
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReal(m_drivebase));
         m_accel = new Accelerometer(m_imu);
         m_intake = new Intake(new IntakeIOTalonFX());
+        m_climb = new Climb(new ClimbIOTalonFX());
         sweep = null;
         break;
 
@@ -205,6 +211,7 @@ public class RobotContainer {
         m_Turret = new Turret(new TurretIOTalonFX(), () -> m_drivebase.getFieldLinearVelocity().getX(), () -> m_drivebase.getFieldLinearVelocity().getY());
         m_flywheel = new Flywheel(new FlywheelIOSim());
         m_intake = new Intake(new IntakeIOTalonFX());
+        m_climb = new Climb(new ClimbIOTalonFX());
 
         // ---------------- Vision IOs (robot code) ----------------
         var cams = frc.robot.Constants.Cameras.ALL;
@@ -249,6 +256,7 @@ public class RobotContainer {
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReplay());
         m_accel = new Accelerometer(m_imu);
         m_intake = new Intake(new IntakeIOTalonFX());
+        m_climb = new Climb(new ClimbIOTalonFX());
         m_Turret = new Turret(new TurretIOTalonFX(), () -> m_drivebase.getFieldLinearVelocity().getX(), () -> m_drivebase.getFieldLinearVelocity().getY());
         sweep = null;
         break;

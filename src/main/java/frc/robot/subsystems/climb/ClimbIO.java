@@ -4,14 +4,12 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ClimbIO {
 
-   // -- Power Ports used by Climb -- //
+  // -- Power Ports used by Climb -- //
   public final int[] powerPorts = {};
 
   @AutoLog
   public static class ClimbIOInputs {
     public boolean motorConnected = true;
-    public boolean followerConnected = true;
-    public double positionRad = 0.0;
     public double velocityRadPerSec = 0.0;
     public double[] appliedVolts = new double[] {};
     public double[] torqueCurrentAmps = new double[] {};
@@ -23,29 +21,20 @@ public interface ClimbIO {
 
   default void runOpenLoop(double output) {}
 
-  default void runVolts(double volts) {}
-
   default void stop() {}
 
-  // -- Run elevator output shaft to positionRad with addition feedforward output -- //
-  default void runPosition(double positionRad, double feedforward) {}
+  default void goUp() {}
 
-  default void setPID(
-      double kP, double kI, double kD, double kG, double kV, double kA, double kS) {}
+  default void setMode(boolean enabled) {}
 
-  default void setBrakeMode(boolean enabled) {}
-
-  default void zeroPosition() {}
+  default void goHome(double percent) {}
 
   default double getPosition() {
-    return 27.34;
+    return 0.0;
   }
 
   default void runTone(double tone) {}
 
-  default double getCurrent() {
-    return 27.34;
-  }
+  // default double getCurrent() {}
   ;
-
 }

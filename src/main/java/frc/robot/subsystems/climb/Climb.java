@@ -1,47 +1,45 @@
 package frc.robot.subsystems.climb;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.RobotDevices;
 
-public class Climb extends SubsystemBase{
+public class Climb extends SubsystemBase {
 
+  private DigitalInput limitSwitch = new DigitalInput(RobotDevices.CLIMB_LIMIT_SWITCH);
+  private ClimbIOTalonFX motor;
+  private boolean isHomed = false;
 
-  // positions of the climb, in inches from limit switch 
-  public enum Position{
-    HOMED(0),
-    HIT(10);
+  // constructor for climb
+  public Climb(ClimbIOTalonFX motor) {
+    this.motor = motor;
+  }
 
-    private final double inches; 
+  // retract climb all the way down
+  public boolean isHomed() {
+    boolean isHomed = limitSwitch.get();
+    return isHomed;
+  }
 
-    private Position(double inches){
-      this.inches = inches; 
+  // home the climb
+  public void homeClimb() {
+    if (!isHomed) {
+      motor.goHome(-0.5);
     }
-
-  }
-  
-  private ClimbIOTalonFX motor; 
-  private boolean isHomed = false; 
-  private Position maxPosition;
-  private Position currentPosition; 
-  // constructor for climb 
-  public Climb(){
-    motor = new ClimbIOTalonFX(); 
-
   }
 
-
-  public void setPosition(Position position){
-
+  // after homing, set brake mode to hold position
+  public void setMode() {
+    motor.setMode(true);
   }
 
-  public void setPercentOutput(double percent){
-
+  // release brake mode for extending climb
+  public void setCoastMode() {
+    motor.setMode(false);
   }
 
-  public boolean isHomed(){
-    return isHomed; 
+  // release climb all the way up
+  public void extendClimb() {
+    motor.goUp();
   }
-  
-
-  
-
 }

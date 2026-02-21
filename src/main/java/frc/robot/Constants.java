@@ -107,8 +107,6 @@ public final class Constants {
 
   public static final boolean tuningMode = false;
 
-
-
   /************************************************************************* */
   /** Physical Constants for Robot Operation ******************************* */
   public static final class RobotConstants {
@@ -264,7 +262,7 @@ public final class Constants {
     // This is where digital I/O feedback devices are defined
     // Example:
     // public static final int ELEVATOR_BOTTOM_LIMIT = 3;
-    public static final int CLIMB_LIMIT_SWITCH = 0; 
+    public static final int CLIMB_LIMIT_SWITCH = 0;
 
     /* LINEAR SERVO PWM CHANNELS */
     // This is where PWM-controlled devices (actuators, servos, pneumatics, etc.)
@@ -405,23 +403,19 @@ public final class Constants {
     public static final double kDsim = 0.0;
   }
 
+  public static final class ClimbConstants {
 
-  public static final class ClimbConstants{
-    
-    public static final double kClimbGearRatio = 0; 
+    public static final double kClimbGearRatio = 12.1;
 
     public static final double kTorque = 0; // Nm
 
     public static final double maxCurrent = 0; // amps w
 
-    public static final double maxAcceleration = 0; // m/s squared 
+    public static final double maxAcceleration = 0; // m/s squared
 
     public static final double maxVelocity = 0; // m/s
 
-    public static final double tolerance = 0; // inches 
-
-
-
+    public static final double tolerance = 0; // inches
   }
 
   /************************************************************************* */
