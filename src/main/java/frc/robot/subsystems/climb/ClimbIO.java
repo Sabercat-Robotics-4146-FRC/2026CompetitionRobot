@@ -29,6 +29,6 @@ public interface ClimbIO extends RBSIIO {
   default void goHome() {}
 
   default double getPosition() {
-    return 27.34;
+    return 0.0;
   }
 }

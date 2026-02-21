@@ -107,8 +107,6 @@ public final class Constants {
 
   public static final boolean tuningMode = false;
 
-
-
   /************************************************************************* */
   /** Physical Constants for Robot Operation ******************************* */
   public static final class RobotConstants {
