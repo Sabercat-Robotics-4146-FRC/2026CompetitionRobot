@@ -29,7 +29,7 @@ public class Climb extends SubsystemBase {
   }
 
   // after homing, set brake mode to hold position
-  public void setMode() {
+  public void setBrakeMode() {
     motor.setMode(true);
   }
 
