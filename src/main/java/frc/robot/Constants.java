@@ -259,6 +259,8 @@ public final class Constants {
 
     public static final RobotDeviceId Shooter = new RobotDeviceId(22, CANBuses.RIO, 10);
 
+    public static final RobotDeviceId Kicker = new RobotDeviceId(23, CANBuses.RIO, 9);
+
     /* BEAM BREAK and/or LIMIT SWITCH DIO CHANNELS */
     // This is where digital I/O feedback devices are defined
     // Example:
