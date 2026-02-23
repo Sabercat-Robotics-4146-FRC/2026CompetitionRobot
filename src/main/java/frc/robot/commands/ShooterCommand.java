@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 
+
+//when shooter camera is lined up, this command can run or there can be an override 
 public class ShooterCommand extends Command{
 
   private final Shooter shooter;
