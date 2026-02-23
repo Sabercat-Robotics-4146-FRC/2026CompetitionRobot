@@ -28,13 +28,5 @@ public interface ClimbIO {
   default void setMode(boolean enabled) {}
 
   default void goHome(double percent) {}
-
-  default double getPosition() {
-    return 0.0;
-  }
-
-  default void runTone(double tone) {}
-
-  // default double getCurrent() {}
   ;
 }

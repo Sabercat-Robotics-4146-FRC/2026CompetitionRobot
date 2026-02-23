@@ -2,9 +2,10 @@ package frc.robot.subsystems.climb;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotDevices;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -14,23 +15,21 @@ public class ClimbIOTalonFX implements ClimbIO {
   private static final LoggedTunableNumber kI = new LoggedTunableNumber("Climb/kI", 0.0);
   private static final LoggedTunableNumber kD = new LoggedTunableNumber("Climb/kD", 0.0);
   private static final LoggedTunableNumber kS = new LoggedTunableNumber("Climb/kS", 0.55);
-   private static final LoggedTunableNumber kV = new LoggedTunableNumber("Climb/kV", 0.55);
-  public enum ClimbState{
-    HOMED,
-    HANGED
-  }
-  public double homedPosition = 0; 
-  public double hangedPosition = 100; //needs tuning 
+  private static final LoggedTunableNumber kV = new LoggedTunableNumber("Climb/kV", 0.55);
+
+
+  public double homedPosition = 0;
+  public static double hangedPosition = 100; // needs tuning these are encoder values 
 
   private TalonFX climbMotor;
   private final DutyCycleOut percentRequest = new DutyCycleOut(0.0);
+  private final MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(0.0);
 
   public ClimbIOTalonFX() {
     climbMotor =
         new TalonFX(
             RobotDevices.CLIMB_MOTOR.getDeviceNumber(), RobotDevices.CLIMB_MOTOR.getCANBus());
   }
-
 
   @Override
   public void setMode(boolean mode) {
@@ -39,27 +38,44 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void goHome(double percent) {
-    climbMotor.setControl(percentRequest.withOutput(percent));
+    climbMotor.setControl(percentRequest.withOutput(-0.8));
     setMode(true);
+  }
+
+  public void configureClimbMotor() {
+    TalonFXConfiguration config = new TalonFXConfiguration();
+
+    // pid gains
+    config.Slot0.kP = kP.get(); // tune this
+    config.Slot0.kI = kI.get();
+    config.Slot0.kD = kD.get();
+
+    // Feedforward (helps shooter reach speed faster)
+    config.Slot0.kS = kS.get(); // static friction
+    config.Slot0.kV = kV.get(); // velocity gain
+
+    config.MotionMagic.MotionMagicCruiseVelocity = 100; // tune it
+    config.MotionMagic.MotionMagicAcceleration = 100; // tune it
+
+    climbMotor.getConfigurator().apply(config);
   }
 
   @Override
   public void goUp() {
-    TalonFXConfiguration config = new TalonFXConfiguration();
-    config.kP = kP.get();
-    config.kI = kI.get();
-    config.kD = kD.get();
-    config.kS = kS.get();
-    config.kV = kV.get();
-
-    climbMotor.getConfigurator().apply(config);
-    climbMotor.setControl(percentRequest.withOutput(0.0));
+    configureClimbMotor();
+    climbMotor.setControl(motionMagicVoltage.withPosition(Units.radiansToRotations(hangedPosition)).withFeedForward(0));
   }
 
-  public void zeroPosition(){
+  public double getPosition(){
+    return climbMotor.getPosition().getValueAsDouble();
+  }
+
+  public void zeroPosition() {
     climbMotor.setPosition(0);
   }
 
-  public void setBrakeMode(){
+  @Override
+  public void stop() {
+    climbMotor.setControl(percentRequest.withOutput(0.0));
   }
 }

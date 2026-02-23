@@ -12,7 +12,6 @@ public class Climb extends SubsystemBase {
   private ClimbIOTalonFX motor;
   private boolean isHomed = false;
 
-
   // constructor for climb
   public Climb(ClimbIOTalonFX motor) {
     this.motor = motor;
@@ -22,17 +21,6 @@ public class Climb extends SubsystemBase {
   public boolean isHomed() {
     boolean isHomed = !debouncer.calculate(limitSwitch.get());
     return isHomed;
-  }
-
-  // home the climb
-  public void homeClimb() {
-    if (!isHomed) {
-      motor.goHome(-0.5);
-    }
-  }
-
-  public void zeroedPosition(){
-    motor.zeroPosition();
   }
 
   // after homing, set brake mode to hold position
@@ -45,8 +33,28 @@ public class Climb extends SubsystemBase {
     motor.setMode(false);
   }
 
+  // home the climb
+  public void homeClimb() {
+    setCoastMode();
+    if (!isHomed) {
+      motor.goHome(-0.5);
+    }
+    else{
+      motor.stop();
+    }
+    motor.zeroPosition();
+    setBrakeMode();
+    System.out.println("position" + motor.getPosition());
+  }
+
   // release climb all the way up
   public void extendClimb() {
+    setCoastMode();
     motor.goUp();
+    setBrakeMode();
+  }
+
+  public boolean isAtHangedPosition() {
+    return motor.getPosition() == ClimbIOTalonFX.hangedPosition; 
   }
 }
