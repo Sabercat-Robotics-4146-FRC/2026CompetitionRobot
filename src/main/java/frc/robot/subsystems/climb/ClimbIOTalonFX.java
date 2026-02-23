@@ -109,4 +109,11 @@ public class ClimbIOTalonFX implements ClimbIO {
   public void stop() {
     climbMotor.stopMotor();
   }
+
+  public void zeroPosition(){
+    climbMotor.setPosition(0);
+  }
+
+  public void setBrakeMode(){
+  }
 }
