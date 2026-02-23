@@ -1,8 +1,8 @@
 package frc.robot.subsystems.climb;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
@@ -17,12 +17,11 @@ public class ClimbIOTalonFX implements ClimbIO {
   private static final LoggedTunableNumber kS = new LoggedTunableNumber("Climb/kS", 0.55);
   private static final LoggedTunableNumber kV = new LoggedTunableNumber("Climb/kV", 0.55);
 
-
   public double homedPosition = 0;
-  public static double hangedPosition = 100; // needs tuning these are encoder values 
-
+  public static double hangedPosition = 100; // needs tuning these are encoder values
+  public double voltage;
   private TalonFX climbMotor;
-  private final DutyCycleOut percentRequest = new DutyCycleOut(0.0);
+  private final VoltageOut voltageRequest = new VoltageOut(voltage);
   private final MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(0.0);
 
   public ClimbIOTalonFX() {
@@ -37,8 +36,9 @@ public class ClimbIOTalonFX implements ClimbIO {
   }
 
   @Override
-  public void goHome(double percent) {
-    climbMotor.setControl(percentRequest.withOutput(-0.8));
+  public void goHome(double volts) {
+    voltage = 6; 
+    climbMotor.setControl(voltageRequest);
     setMode(true);
   }
 
@@ -62,11 +62,16 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void goUp() {
+    voltage = - 6; 
     configureClimbMotor();
-    climbMotor.setControl(motionMagicVoltage.withPosition(Units.radiansToRotations(hangedPosition)).withFeedForward(0));
+    climbMotor.setControl(voltageRequest);
+      /* 
+        motionMagicVoltage
+            .withPosition(Units.radiansToRotations(hangedPosition))
+            .withFeedForward(0));*/
   }
 
-  public double getPosition(){
+  public double getPosition() {
     return climbMotor.getPosition().getValueAsDouble();
   }
 
@@ -76,6 +81,6 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void stop() {
-    climbMotor.setControl(percentRequest.withOutput(0.0));
+    climbMotor.stopMotor();
   }
 }

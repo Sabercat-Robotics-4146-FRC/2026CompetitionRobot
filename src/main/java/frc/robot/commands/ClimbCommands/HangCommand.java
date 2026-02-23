@@ -1,24 +1,15 @@
 package frc.robot.commands.ClimbCommands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.climb.Climb;
 
-public class HangCommand extends Command{
-
-  private final Climb climb;
-
-  public HangCommand(Climb climb){
-    this.climb = climb; 
-  }
-
-  @Override
-  public void execute(){
-    climb.extendClimb();
-  }
-
-  @Override
-  public boolean isFinished(){
-    return climb.isAtHangedPosition(); 
+public class HangCommand extends SequentialCommandGroup{
+  public HangCommand(RobotContainer container, Climb climb){
+    addCommands(
+      new ExtendCommand(climb),
+      new RetractCommand(climb)
+    );
   }
 
 }

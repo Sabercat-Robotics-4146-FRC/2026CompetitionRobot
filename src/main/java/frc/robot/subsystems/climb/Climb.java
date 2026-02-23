@@ -38,8 +38,7 @@ public class Climb extends SubsystemBase {
     setCoastMode();
     if (!isHomed) {
       motor.goHome(-0.5);
-    }
-    else{
+    } else {
       motor.stop();
     }
     motor.zeroPosition();
@@ -52,9 +51,10 @@ public class Climb extends SubsystemBase {
     setCoastMode();
     motor.goUp();
     setBrakeMode();
+    System.out.println("position" + motor.getPosition());
   }
 
   public boolean isAtHangedPosition() {
-    return motor.getPosition() == ClimbIOTalonFX.hangedPosition; 
+    return motor.getPosition() == ClimbIOTalonFX.hangedPosition;
   }
 }
