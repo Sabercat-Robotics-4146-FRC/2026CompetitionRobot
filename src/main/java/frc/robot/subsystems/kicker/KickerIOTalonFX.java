@@ -1,10 +1,12 @@
 package frc.robot.subsystems.kicker;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import static edu.wpi.first.units.Units.Amps;
 
 import frc.robot.Constants;
 
@@ -15,7 +17,13 @@ public class KickerIOTalonFX implements KickerIO{
   private final TalonFXConfiguration config = new TalonFXConfiguration()
   .withMotorOutput(
                 new MotorOutputConfigs()
-                    .withNeutralMode(NeutralModeValue.Brake));
+                    .withNeutralMode(NeutralModeValue.Brake))
+  .withCurrentLimits(
+    new CurrentLimitsConfigs()
+     .withStatorCurrentLimit(Amps.of(120))
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimit(Amps.of(50))
+                    .withSupplyCurrentLimitEnable(true));
   
 
   public KickerIOTalonFX(){
