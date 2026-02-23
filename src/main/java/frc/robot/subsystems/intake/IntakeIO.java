@@ -1,10 +1,9 @@
 package frc.robot.subsystems.intake;
 
+import frc.robot.util.RBSIIO;
 import org.littletonrobotics.junction.AutoLog;
 
-import frc.robot.util.RBSIIO;
-
-public interface IntakeIO extends RBSIIO{
+public interface IntakeIO extends RBSIIO {
 
   @AutoLog
   public static class IntakeIOInputs {
@@ -13,20 +12,19 @@ public interface IntakeIO extends RBSIIO{
     public double[] currentAmps = new double[] {};
   }
 
-  public default void updateInputs(IntakeIO io){} 
+  public default void updateInputs(IntakeIO io) {}
 
-  public default void setPercentOutputExtender(double percentOutput){}
+  public default void setOutputExtender(double output) {}
 
-   public default void setPercentOutputRoller(double percentOutput){}
+  public default void setOutputRoller() {}
 
-  public default void stopExtender(){}
+  public default void stopExtender() {}
 
-  public default void stopRoller(){}
+  public default void stopRoller() {}
 
-  public default void setMode(){}
+  public default void setMode() {}
 
-  public default void getCurrent(){}
+  public default void setExtenderMode(boolean enabled) {}
 
-
-
+  public default void getCurrent() {}
 }

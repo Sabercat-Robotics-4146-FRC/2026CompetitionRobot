@@ -216,10 +216,10 @@ public final class Constants {
     public static final RobotDeviceId FLYWHEEL_LEADER = new RobotDeviceId(3, CANBuses.RIO, 8);
     public static final RobotDeviceId FLYWHEEL_FOLLOWER = new RobotDeviceId(4, CANBuses.RIO, 9);
 
-    //intake
+    // intake
     public static final RobotDeviceId IntakeRoller = new RobotDeviceId(26, CANBuses.RIO, 10);
-    public static final RobotDeviceId IntakeExtender = new RobotDeviceId(3, CANBuses.RIO, 11); 
-   
+    public static final RobotDeviceId IntakeExtender = new RobotDeviceId(3, CANBuses.RIO, 11);
+
     /* BEAM BREAK and/or LIMIT SWITCH DIO CHANNELS */
     // This is where digital I/O feedback devices are defined
     // Example:
@@ -369,8 +369,8 @@ public final class Constants {
   // public static class Mechanism1Constants {}
   // public static class Mechanism2Constants {}
   // ...
-  public static final class IntakeConstants{
-     // Mechanism idle mode
+  public static final class IntakeConstants {
+    // Mechanism idle mode
     public static final MotorIdleMode kIntakeIdleMode = MotorIdleMode.COAST; // BRAKE, COAST
 
     // Mechanism motor gear ratio
