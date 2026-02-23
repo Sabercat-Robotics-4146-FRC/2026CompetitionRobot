@@ -116,6 +116,6 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void stop() {
-    climbMotor.setControl(percentRequest.withOutput(0.0));
+    climbMotor.stopMotor();
   }
 }
