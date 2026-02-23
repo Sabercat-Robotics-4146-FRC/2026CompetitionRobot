@@ -1,5 +1,6 @@
 package frc.robot.subsystems.climb;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotDevices;
@@ -7,8 +8,10 @@ import frc.robot.Constants.RobotDevices;
 public class Climb extends SubsystemBase {
 
   private DigitalInput limitSwitch = new DigitalInput(RobotDevices.CLIMB_LIMIT_SWITCH);
+  private Debouncer debouncer = new Debouncer(0.1);
   private ClimbIOTalonFX motor;
   private boolean isHomed = false;
+
 
   // constructor for climb
   public Climb(ClimbIOTalonFX motor) {
@@ -17,7 +20,7 @@ public class Climb extends SubsystemBase {
 
   // retract climb all the way down
   public boolean isHomed() {
-    boolean isHomed = limitSwitch.get();
+    boolean isHomed = !debouncer.calculate(limitSwitch.get());
     return isHomed;
   }
 
@@ -26,6 +29,10 @@ public class Climb extends SubsystemBase {
     if (!isHomed) {
       motor.goHome(-0.5);
     }
+  }
+
+  public void zeroedPosition(){
+    motor.zeroPosition();
   }
 
   // after homing, set brake mode to hold position

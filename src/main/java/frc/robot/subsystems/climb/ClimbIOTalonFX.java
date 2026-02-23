@@ -1,15 +1,28 @@
 package frc.robot.subsystems.climb;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.filter.Debouncer;
 import frc.robot.Constants.RobotDevices;
+import frc.robot.util.LoggedTunableNumber;
 
 public class ClimbIOTalonFX implements ClimbIO {
 
+  private static final LoggedTunableNumber kP = new LoggedTunableNumber("Climb/kP", 0.55);
+  private static final LoggedTunableNumber kI = new LoggedTunableNumber("Climb/kI", 0.0);
+  private static final LoggedTunableNumber kD = new LoggedTunableNumber("Climb/kD", 0.0);
+  private static final LoggedTunableNumber kS = new LoggedTunableNumber("Climb/kS", 0.55);
+   private static final LoggedTunableNumber kV = new LoggedTunableNumber("Climb/kV", 0.55);
+  public enum ClimbState{
+    HOMED,
+    HANGED
+  }
+  public double homedPosition = 0; 
+  public double hangedPosition = 100; //needs tuning 
+
   private TalonFX climbMotor;
-  private final Debouncer debouncer = new Debouncer(0.5);
   private final DutyCycleOut percentRequest = new DutyCycleOut(0.0);
 
   public ClimbIOTalonFX() {
@@ -18,34 +31,7 @@ public class ClimbIOTalonFX implements ClimbIO {
             RobotDevices.CLIMB_MOTOR.getDeviceNumber(), RobotDevices.CLIMB_MOTOR.getCANBus());
   }
 
-  /*private final TalonFXConfiguration config = new TalonFXConfiguration();
 
-  private final StatusSignal<AngularVelocity> velocity;
-
-  private final StatusSignal<Voltage> appliedVolts;
-  private final StatusSignal<Current> torqueCurrent;
-  private final StatusSignal<Current> supplyCurrent;
-  private final StatusSignal<Temperature> temp;*/
-
-  /*private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
-
-   var motionMagicConfigs = config.MotionMagic;
-   motionMagicConfigs.MotionMagicCruiseVelocity = 80;
-   motionMagicConfigs.MotionMagicAccleration = 80;
-
-   position = climbMotor.getPosition();
-   velocity = climbMotor.getVelocity();
-   appliedVolts = climbMotor.getAppliedVoltage();
-   torqueCurrent = climbMotor.getTorqueCurrent();
-
-   temp = climbMotor.getTemperature();
-
-   BaseStatusSignal.setUpdateFrequencyForAll(
-         50.0, position, velocity, appliedVolts, torqueCurrent, temp);
-
-   motionMagicVoltage.EnableFOC = true;
-
-  */
   @Override
   public void setMode(boolean mode) {
     climbMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
@@ -59,6 +45,21 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void goUp() {
+    TalonFXConfiguration config = new TalonFXConfiguration();
+    config.kP = kP.get();
+    config.kI = kI.get();
+    config.kD = kD.get();
+    config.kS = kS.get();
+    config.kV = kV.get();
+
+    climbMotor.getConfigurator().apply(config);
     climbMotor.setControl(percentRequest.withOutput(0.0));
+  }
+
+  public void zeroPosition(){
+    climbMotor.setPosition(0);
+  }
+
+  public void setBrakeMode(){
   }
 }
