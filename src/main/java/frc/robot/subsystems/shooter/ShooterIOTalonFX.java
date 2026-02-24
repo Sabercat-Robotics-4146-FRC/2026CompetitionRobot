@@ -1,19 +1,13 @@
 package frc.robot.subsystems.shooter;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import static edu.wpi.first.units.Units.Amps;
-
 import frc.robot.Constants;
 import frc.robot.util.LoggedTunableNumber;
 
-public class ShooterIOTalonFX implements ShooterIO{
+public class ShooterIOTalonFX implements ShooterIO {
 
   private static final LoggedTunableNumber kP = new LoggedTunableNumber("Shooter/kP", 0.0);
   private static final LoggedTunableNumber kI = new LoggedTunableNumber("Shooter/kI", 0);
@@ -23,35 +17,37 @@ public class ShooterIOTalonFX implements ShooterIO{
   private static final LoggedTunableNumber kS = new LoggedTunableNumber("Shooter/kS", 0.0);
 
   private final TalonFX shooter;
-  private final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0); 
-  private final double targetRPS = 0; 
+  private final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
+  private final double targetRPS = 0;
 
-  public ShooterIOTalonFX(){
-    shooter = new TalonFX(Constants.RobotDevices.Shooter.getDeviceNumber(), 
-    Constants.RobotDevices.Shooter.getBus());
+  public ShooterIOTalonFX() {
+    shooter =
+        new TalonFX(
+            Constants.RobotDevices.Shooter.getDeviceNumber(),
+            Constants.RobotDevices.Shooter.getBus());
 
     configureShooter();
   }
 
   @Override
-  public void setVelocityRPS(){
+  public void setVelocityRPS() {
     shooter.setControl(velocityRequest.withVelocity(targetRPS));
   }
 
-  public void configureShooter(){
+  public void configureShooter() {
     TalonFXConfiguration config = new TalonFXConfiguration();
 
     // PID gains
-    config.Slot0.kP = kP.get();  // tune this
+    config.Slot0.kP = kP.get(); // tune this
     config.Slot0.kI = kI.get();
     config.Slot0.kD = kD.get();
 
     // Feedforward (helps shooter reach speed faster)
-    config.Slot0.kS = kS.get();   // static friction
-    config.Slot0.kV = kV.get();  // velocity gain
+    config.Slot0.kS = kS.get(); // static friction
+    config.Slot0.kV = kV.get(); // velocity gain
     config.Slot0.kA = kA.get();
 
-    // mode 
+    // mode
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
 
     // current limits
@@ -72,6 +68,4 @@ public class ShooterIOTalonFX implements ShooterIO{
   public void stop() {
     shooter.stopMotor();
   }
-
-
 }

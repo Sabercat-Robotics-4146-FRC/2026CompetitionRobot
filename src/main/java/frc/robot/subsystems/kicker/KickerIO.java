@@ -4,6 +4,5 @@ public interface KickerIO {
 
   public default void setVoltage(double voltage) {}
 
-  public default void stop(){}
-
+  public default void stop() {}
 }

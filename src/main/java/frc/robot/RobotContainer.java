@@ -55,7 +55,7 @@ import frc.robot.subsystems.turret.Turret;
 import frc.robot.subsystems.turret.Turret.TurretState;
 import frc.robot.subsystems.turret.TurretIOTalonFX;
 import frc.robot.subsystems.kicker.Kicker;
-import frc.robot.subsystems.kicker.KickerIO;
+import frc.robot.subsystems.kicker.KickerIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
 import frc.robot.subsystems.vision.CameraSweepEvaluator;
@@ -110,7 +110,7 @@ public class RobotContainer {
   // ... Add additional subsystems here (e.g., elevator, arm, etc.)
   private final Kicker m_kicker;
 
-  private final Shooter m_shooter; 
+  private final Shooter m_shooter;
 
   // These are "Virtual Subsystems" that report information but have no motors
   private final Imu m_imu;
@@ -201,7 +201,7 @@ public class RobotContainer {
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReal(m_drivebase));
         m_accel = new Accelerometer(m_imu);
         m_intake = new Intake(new IntakeIOTalonFX());
-        m_kicker = new Kicker(new KickerIO());
+        m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX());
         sweep = null;
         break;
@@ -214,7 +214,7 @@ public class RobotContainer {
         m_Turret = new Turret(new TurretIOTalonFX(), () -> m_drivebase.getFieldLinearVelocity().getX(), () -> m_drivebase.getFieldLinearVelocity().getY());
         m_flywheel = new Flywheel(new FlywheelIOSim());
         m_intake = new Intake(new IntakeIOTalonFX());
-        m_kicker = new Kicker(new KickerIO());
+        m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX());
 
         // ---------------- Vision IOs (robot code) ----------------
@@ -261,7 +261,7 @@ public class RobotContainer {
         m_accel = new Accelerometer(m_imu);
         m_intake = new Intake(new IntakeIOTalonFX());
         m_Turret = new Turret(new TurretIOTalonFX(), () -> m_drivebase.getFieldLinearVelocity().getX(), () -> m_drivebase.getFieldLinearVelocity().getY());
-         m_kicker = new Kicker(new KickerIO());
+        m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX());
         sweep = null;
         break;

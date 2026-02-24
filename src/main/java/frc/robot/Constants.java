@@ -22,7 +22,6 @@ import static edu.wpi.first.units.Units.*;
 import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
-import com.revrobotics.spark.config.FeedForwardConfig;
 import com.therekrab.autopilot.APConstraints;
 import com.therekrab.autopilot.APProfile;
 import com.therekrab.autopilot.Autopilot;
@@ -447,7 +446,7 @@ public final class Constants {
     public static final double maxCurrent = 0;
     public static final double maxVelocity = 0;
 
-    //need feed forward loop 
+    // need feed forward loop
 
     // Feedforward constants
     public static final double kS = 0.1;
@@ -457,10 +456,7 @@ public final class Constants {
     public static final double kP = 1.0;
     public static final double kD = 0.0;
 
-  
-    //add ramp rates later 
-
-
+    // add ramp rates later
 
   }
 

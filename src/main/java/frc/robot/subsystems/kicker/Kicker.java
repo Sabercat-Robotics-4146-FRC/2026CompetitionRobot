@@ -1,18 +1,17 @@
 package frc.robot.subsystems.kicker;
 
 public class Kicker {
-  private final KickerIO kicker; 
+  private final KickerIOTalonFX kicker;
 
-  public Kicker(KickerIO kicker){
-    this.kicker = kicker; 
+  public Kicker(KickerIOTalonFX kicker) {
+    this.kicker = kicker;
   }
 
-  public void setVoltage(){
-    kicker.setVoltage(6); 
+  public void setVoltage() {
+    kicker.setVoltage(6);
   }
 
-   public void stop(){
+  public void stop() {
     kicker.stop();
   }
-
 }
