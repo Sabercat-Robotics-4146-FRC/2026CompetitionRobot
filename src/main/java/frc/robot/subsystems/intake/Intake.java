@@ -7,7 +7,7 @@ public class Intake {
   private final IntakeIO io;
   private final DigitalInput limitSwitchExtended =
       new DigitalInput(2); // true when hopper is extended
-  private final DigitalInput limitSwitchRetracted = new DigitalInput(3);
+  private final DigitalInput limitSwitchRetracted = new DigitalInput(1);
   private final Debouncer debouncerOne = new Debouncer(0.05);
   private final Debouncer debouncerTwo = new Debouncer(0.05);
 
@@ -61,7 +61,8 @@ public class Intake {
     }
   }
 
-  public void periodic() {
+  @Override
+  public periodic() {
     System.out.println("Limit Switch Retracted Value" + limitSwitchRetracted.get());
     System.out.println("Limit Switch Extended Value" + limitSwitchExtended.get());
 
