@@ -28,12 +28,13 @@ public class Intake {
 
   // false if limit switch is pressed, true if not pressed
   public void extendIntake() {
-      io.setOutputExtender(0.8);
-      // tune this number
-  }
-
-  public void setExtenderMode(boolean enable){
-    io.setExtenderMode(enable);
+      if(isRetracted()){
+      io.setOutputExtender(0.8); // tune this number
+      }
+      else{
+        io.stopExtender(); 
+        io.setExtenderMode(true); 
+      } 
   }
 
   public void stopExtender(){
@@ -56,5 +57,10 @@ public class Intake {
     if (isRetracted()) {
       io.setOutputExtender(-0.8); // tune this number
     }
+  }
+
+  public void periodic(){
+    System.out.println("Limit Switch Retracted Value" + limitSwitchRetracted.get());
+    System.out.println("Limit Switch Extended Value" + limitSwitchExtended.get());
   }
 }

@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.RPM;
 import static frc.robot.Constants.RobotDevices.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -36,38 +37,31 @@ public class IntakeIOTalonFX implements IntakeIO {
   }
 
   private final TalonFX roller;
-  private final SparkMax extender;
+  private final TalonFX extender;
   private final VoltageOut voltageRequest = new VoltageOut(6);
+  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
   public final int[] powerPorts = {IntakeRoller.getPowerPort(), IntakeExtender.getPowerPort()};
 
   private final TalonFXConfiguration config = new TalonFXConfiguration();
+  private final TalonFXConfiguration secondConfig = new TalonFXConfiguration();
   private final boolean isCTREPro = (Constants.getPhoenixPro() == CTREPro.LICENSED);
-  private final SparkMaxConfig maxConfig = new SparkMaxConfig();
 
 
   public IntakeIOTalonFX() {
     roller = new TalonFX(IntakeRoller.getDeviceNumber(), IntakeRoller.getCANBus());
-    extender = new SparkMax(IntakeExtender.getDeviceNumber(), MotorType.kBrushed);
+    extender = new TalonFX(IntakeExtender.getDeviceNumber(), IntakeExtender.getCANBus());
 
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     config.CurrentLimits.StatorCurrentLimit = 40;
     config.CurrentLimits.StatorCurrentLimitEnable = true;
 
     roller.getConfigurator().apply(config);
- 
-    maxConfig.idleMode(SparkBaseConfig.IdleMode.kCoast);
-    maxConfig.smartCurrentLimit(50);
-
-    extender.configure(
-            maxConfig,
-            ResetMode.kResetSafeParameters,
-            PersistMode.kPersistParameters
-        );
+    
   }
 
   @Override
   public void setOutputExtender(double n) {
-    extender.set(n);
+    extender.
   }
 
   @Override
@@ -77,7 +71,7 @@ public class IntakeIOTalonFX implements IntakeIO {
 
   @Override
   public void stopExtender() {
-    extender.set(0);
+    extender.stopMotor();
   }
 
   @Override
@@ -91,11 +85,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   }
 
   public void setExtenderMode(boolean enabled){
-    maxConfig.idleMode(SparkBaseConfig.IdleMode.kBrake);
-    extender.configure(
-            maxConfig,
-            ResetMode.kResetSafeParameters,
-            PersistMode.kPersistParameters
-        );
-  }
+    extender.setNeutralMode(enabled ? NeutralModeValue.Coast : NeutralModeValue.Brake);
+}
+
 }
