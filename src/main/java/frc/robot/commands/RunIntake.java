@@ -3,10 +3,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-public class RunIntake extends Command{
+public class RunIntake extends Command {
 
- private final Intake intake;
-
+  private final Intake intake;
 
   public RunIntake(Intake intake) {
     this.intake = intake;
@@ -14,21 +13,18 @@ public class RunIntake extends Command{
 
   @Override
   public void execute() {
-  if(intake.isExtended()){
-    intake.runIntake(); 
-  }
+    if (intake.isExtended()) {
+      intake.runIntake();
+    }
   }
 
   @Override
-  public boolean isFinished(){
+  public boolean isFinished() {
     return true;
-
   }
 
-  @Override 
-  public void end(boolean interrupted){
+  @Override
+  public void end(boolean interrupted) {
     intake.stopIntake();
-
   }
-
 }

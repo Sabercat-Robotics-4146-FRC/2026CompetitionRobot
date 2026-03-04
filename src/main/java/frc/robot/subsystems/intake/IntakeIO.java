@@ -26,5 +26,7 @@ public interface IntakeIO extends RBSIIO {
 
   public default void setExtenderMode(boolean enabled) {}
 
-  public default void getCurrent() {}
+  public default double getPosition() {
+    return 0.0;
+  }
 }
