@@ -2,8 +2,9 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake {
+public class Intake extends SubsystemBase {
   private final IntakeIO io;
   private final DigitalInput limitSwitchExtended =
       new DigitalInput(2); // true when hopper is extended
@@ -62,7 +63,7 @@ public class Intake {
   }
 
   @Override
-  public periodic() {
+  public void periodic() {
     System.out.println("Limit Switch Retracted Value" + limitSwitchRetracted.get());
     System.out.println("Limit Switch Extended Value" + limitSwitchExtended.get());
 
