@@ -20,8 +20,8 @@ public class Intake extends SubsystemBase {
 
   // returns true if limit switch 1 is not being held
   public boolean isExtended() {
-    return debouncerOne.calculate(limitSwitchExtended.get())
-        && !debouncerTwo.calculate(limitSwitchRetracted.get());
+    return !debouncerOne.calculate(limitSwitchExtended.get())
+        && debouncerTwo.calculate(limitSwitchRetracted.get());
   }
 
   // return true if limit switch is being held
@@ -64,8 +64,9 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println("Limit Switch Retracted Value" + limitSwitchRetracted.get());
-    System.out.println("Limit Switch Extended Value" + limitSwitchExtended.get());
+
+    // System.out.println("Limit Switch Retracted Value" + limitSwitchRetracted.get());
+    // System.out.println("Limit Switch Extended Value" + limitSwitchExtended.get());
 
     System.out.println("angle" + io.getPosition());
   }

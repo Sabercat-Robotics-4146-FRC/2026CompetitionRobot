@@ -47,6 +47,8 @@ import frc.robot.subsystems.flywheel_example.FlywheelIO;
 import frc.robot.subsystems.flywheel_example.FlywheelIOSim;
 import frc.robot.subsystems.imu.Imu;
 import frc.robot.subsystems.imu.ImuIOSim;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.vision.CameraSweepEvaluator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -91,6 +93,8 @@ public class RobotContainer {
   private final Drive m_drivebase;
 
   private final Flywheel m_flywheel;
+
+  private final Intake m_intake;
 
   // ... Add additional subsystems here (e.g., elevator, arm, etc.)
 
@@ -181,6 +185,7 @@ public class RobotContainer {
         m_flywheel = new Flywheel(new FlywheelIOSim()); // new Flywheel(new FlywheelIOTalonFX());
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReal(m_drivebase));
         m_accel = new Accelerometer(m_imu);
+        m_intake = new Intake(new IntakeIO() {});
         sweep = null;
         break;
 
@@ -190,6 +195,7 @@ public class RobotContainer {
         m_imu = new Imu(new ImuIOSim());
         m_drivebase = new Drive(m_imu);
         m_flywheel = new Flywheel(new FlywheelIOSim());
+        m_intake = new Intake(new IntakeIO() {});
 
         // ---------------- Vision IOs (robot code) ----------------
         var cams = frc.robot.Constants.Cameras.ALL;
@@ -233,6 +239,7 @@ public class RobotContainer {
         m_flywheel = new Flywheel(new FlywheelIO() {});
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReplay());
         m_accel = new Accelerometer(m_imu);
+        m_intake = new Intake(new IntakeIO() {});
         sweep = null;
         break;
     }
