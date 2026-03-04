@@ -37,8 +37,10 @@ public class Accelerometer extends VirtualSubsystem {
   private final Imu imu;
 
   // Precompute yaw-only rotation terms
-  private static final double rioCos = Math.cos(RobotConstants.kRioOrientation.getRadians());
-  private static final double rioSin = Math.sin(RobotConstants.kRioOrientation.getRadians());
+  private static final double rioCosYaw = Math.cos(RobotConstants.kRioOrientation.getZ());
+  private static final double rioSinYaw = Math.sin(RobotConstants.kRioOrientation.getZ());
+  private static final double rioCosPitch = Math.cos(RobotConstants.kRioOrientation.getY());
+  private static final double rioSinPitch = Math.sin(RobotConstants.kRioOrientation.getY());
   private static final double imuCos = Math.cos(RobotConstants.kIMUOrientation.getRadians());
   private static final double imuSin = Math.sin(RobotConstants.kIMUOrientation.getRadians());
 
@@ -78,9 +80,13 @@ public class Accelerometer extends VirtualSubsystem {
     final double rawY = rioInputs.yG;
     final double rawZ = rioInputs.zG;
 
-    final double rioAx = (rioCos * rawX - rioSin * rawY) * G_TO_MPS2;
-    final double rioAy = (rioSin * rawX + rioCos * rawY) * G_TO_MPS2;
-    final double rioAz = rawZ * G_TO_MPS2;
+    final double rioAx =
+        (rioCosYaw * rawX - rioSinYaw * rawY * rioCosPitch + rioSinYaw * rawZ * rioSinPitch)
+            * G_TO_MPS2;
+    final double rioAy =
+        (rioSinYaw * rawX + rioCosYaw * rawY * rioCosPitch - rioCosYaw * rawZ * rioSinPitch)
+            * G_TO_MPS2;
+    final double rioAz = (rawY * rioSinPitch + rawZ * rioCosPitch) * G_TO_MPS2;
 
     final double rioJx = (rioAx - prevRioAx) / Constants.loopPeriodSecs;
     final double rioJy = (rioAy - prevRioAy) / Constants.loopPeriodSecs;
