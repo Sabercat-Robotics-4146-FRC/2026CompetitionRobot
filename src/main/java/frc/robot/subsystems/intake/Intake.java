@@ -65,8 +65,9 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
 
-    // System.out.println("Limit Switch Retracted Value" + limitSwitchRetracted.get());
-    // System.out.println("Limit Switch Extended Value" + limitSwitchExtended.get());
+    System.out.println("Limit Switch Retracted Value" + !limitSwitchRetracted.get());
+    System.out.println("Limit Switch Extended Value" + !limitSwitchExtended.get());
+    io.setOutputExtender(0.3);
 
     System.out.println("angle" + io.getPosition());
   }

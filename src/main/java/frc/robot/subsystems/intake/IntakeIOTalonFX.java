@@ -41,7 +41,7 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final TalonFX roller;
   private final TalonFX extender;
   private final VoltageOut voltageRequest = new VoltageOut(6);
-  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0).withSlot(0);
+  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
   public final int[] powerPorts = {IntakeRoller.getPowerPort(), IntakeExtender.getPowerPort()};
 
   private final TalonFXConfiguration config = new TalonFXConfiguration();
