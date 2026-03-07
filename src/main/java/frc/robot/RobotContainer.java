@@ -39,6 +39,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AutopilotCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ExtendIntakeCommand;
+import frc.robot.commands.RunIntake;
 import frc.robot.subsystems.accelerometer.Accelerometer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveConstants;
@@ -48,7 +50,7 @@ import frc.robot.subsystems.flywheel_example.FlywheelIOSim;
 import frc.robot.subsystems.imu.Imu;
 import frc.robot.subsystems.imu.ImuIOSim;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.vision.CameraSweepEvaluator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -185,7 +187,7 @@ public class RobotContainer {
         m_flywheel = new Flywheel(new FlywheelIOSim()); // new Flywheel(new FlywheelIOTalonFX());
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReal(m_drivebase));
         m_accel = new Accelerometer(m_imu);
-        m_intake = new Intake(new IntakeIO() {});
+        m_intake = new Intake(new IntakeIOTalonFX() {});
         sweep = null;
         break;
 
@@ -195,7 +197,7 @@ public class RobotContainer {
         m_imu = new Imu(new ImuIOSim());
         m_drivebase = new Drive(m_imu);
         m_flywheel = new Flywheel(new FlywheelIOSim());
-        m_intake = new Intake(new IntakeIO() {});
+        m_intake = new Intake(new IntakeIOTalonFX() {});
 
         // ---------------- Vision IOs (robot code) ----------------
         var cams = frc.robot.Constants.Cameras.ALL;
@@ -239,7 +241,7 @@ public class RobotContainer {
         m_flywheel = new Flywheel(new FlywheelIO() {});
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReplay());
         m_accel = new Accelerometer(m_imu);
-        m_intake = new Intake(new IntakeIO() {});
+        m_intake = new Intake(new IntakeIOTalonFX() {});
         sweep = null;
         break;
     }
@@ -350,17 +352,7 @@ public class RobotContainer {
 
     // ** Example Commands -- Remap, remove, or change as desired **
     // Press B button while driving --> ROBOT-CENTRIC
-    driverController
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                () ->
-                    DriveCommands.robotRelativeDrive(
-                        m_drivebase,
-                        () -> -driveStickY.value(),
-                        () -> -driveStickX.value(),
-                        () -> turnStickX.value()),
-                m_drivebase));
+    driverController.b().onTrue(new RunIntake(m_intake));
 
     // Press A button -> BRAKE
     driverController

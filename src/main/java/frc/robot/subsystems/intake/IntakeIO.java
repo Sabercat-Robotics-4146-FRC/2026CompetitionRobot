@@ -18,6 +18,10 @@ public interface IntakeIO extends RBSIIO {
 
   public default void setOutputRoller() {}
 
+  public default void setExtender() {}
+
+  public default void setRetraction() {}
+
   public default void stopExtender() {}
 
   public default void stopRoller() {}

@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
-  private final IntakeIO io;
+  private final IntakeIOTalonFX io;
   private final DigitalInput limitSwitchExtended =
-      new DigitalInput(2); // true when hopper is extended
-  private final DigitalInput limitSwitchRetracted = new DigitalInput(3);
+      new DigitalInput(3); // true when hopper is extended
+  private final DigitalInput limitSwitchRetracted = new DigitalInput(2);
   private final Debouncer debouncerOne = new Debouncer(0.05);
   private final Debouncer debouncerTwo = new Debouncer(0.05);
 
-  public Intake(IntakeIO io) {
+  public Intake(IntakeIOTalonFX io) {
     this.io = io;
     io.setMode();
     io.setExtenderMode(false);
@@ -33,7 +33,8 @@ public class Intake extends SubsystemBase {
   // false if limit switch is pressed, true if not pressed
   public void extendIntake() {
     if (isRetracted()) {
-      io.setOutputExtender(0.8); // tune this number
+      System.out.println("second test");
+      io.setExtender(); // tune this number
     } else {
       io.stopExtender();
       io.setExtenderMode(true);
@@ -46,9 +47,8 @@ public class Intake extends SubsystemBase {
 
   // only run intake if roller is down
   public void runIntake() {
-    if (isExtended()) {
       io.setOutputRoller();
-    }
+    
   }
 
   public void stopIntake() {
@@ -57,8 +57,12 @@ public class Intake extends SubsystemBase {
 
   public void retractIntake() {
     io.stopRoller();
-    if (isRetracted()) {
-      io.setOutputExtender(-0.8); // tune this number
+    if (isExtended()) {
+      io.setRetraction();
+      System.out.println("second test");
+    } else if (isRetracted()) {
+      io.stopExtender();
+      io.setExtenderMode(false);
     }
   }
 
@@ -68,7 +72,6 @@ public class Intake extends SubsystemBase {
     System.out.println("Limit Switch Retracted" + limitSwitchRetracted.get());
     System.out.println("Limit Switch Extended" + limitSwitchExtended.get());
     // io.setOutputExtender(0.3);
-
     System.out.println("angle" + io.getPosition());
   }
 }

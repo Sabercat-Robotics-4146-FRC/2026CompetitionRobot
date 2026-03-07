@@ -13,9 +13,8 @@ public class RunIntake extends Command {
 
   @Override
   public void execute() {
-    if (intake.isExtended()) {
+   
       intake.runIntake();
-    }
   }
 
   @Override
