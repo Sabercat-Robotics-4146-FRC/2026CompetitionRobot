@@ -8,7 +8,7 @@ public class Intake extends SubsystemBase {
   private final IntakeIO io;
   private final DigitalInput limitSwitchExtended =
       new DigitalInput(2); // true when hopper is extended
-  private final DigitalInput limitSwitchRetracted = new DigitalInput(1);
+  private final DigitalInput limitSwitchRetracted = new DigitalInput(3);
   private final Debouncer debouncerOne = new Debouncer(0.05);
   private final Debouncer debouncerTwo = new Debouncer(0.05);
 
@@ -65,9 +65,9 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
 
-    System.out.println("Limit Switch Retracted Value" + !limitSwitchRetracted.get());
-    System.out.println("Limit Switch Extended Value" + !limitSwitchExtended.get());
-    io.setOutputExtender(0.3);
+    System.out.println("Limit Switch Retracted" + limitSwitchRetracted.get());
+    System.out.println("Limit Switch Extended" + limitSwitchExtended.get());
+    // io.setOutputExtender(0.3);
 
     System.out.println("angle" + io.getPosition());
   }
