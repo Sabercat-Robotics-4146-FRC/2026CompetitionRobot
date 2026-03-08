@@ -21,7 +21,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -53,6 +52,7 @@ import frc.robot.subsystems.imu.ImuIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.turret.Turret;
+import frc.robot.subsystems.turret.Turret.TurretState;
 import frc.robot.subsystems.turret.TurretIOTalonFX;
 import frc.robot.subsystems.vision.CameraSweepEvaluator;
 import frc.robot.subsystems.vision.Vision;
@@ -374,17 +374,45 @@ public class RobotContainer {
                   m_Turret.Home().schedule();
                 }));
     driverController.a().onTrue(new PivotCommand(m_intake));
+    driverController
+        .povUp()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_Turret.setState(TurretState.CENTER);
+                }));
+
+    driverController
+        .povLeft()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_Turret.setState(TurretState.LEFT);
+                }));
+    driverController
+        .povRight()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_Turret.setState(TurretState.RIGHT);
+                }));
+    driverController
+        .y()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_Turret.setState(TurretState.AUTO);
+                }));
 
     // Press X button --> Stop with wheels in X-Lock position
     driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));
 
-    // Press Y button --
-    // > Manually Re-Zero the Gyro
-    driverController
-        .y()
-        .onTrue(
-            Commands.runOnce(m_drivebase::zeroHeadingForAlliance, m_drivebase)
-                .ignoringDisable(true));
+    // Press Y button --> Manually Re-Zero the Gyro
+    // driverController
+    //     .y()
+    //     .onTrue(
+    //         Commands.runOnce(m_drivebase::zeroHeadingForAlliance, m_drivebase)
+    //             .ignoringDisable(true));
 
     // Press RIGHT BUMPER --> Run the example flywheel
     driverController
@@ -419,17 +447,18 @@ public class RobotContainer {
                 Set.of(m_drivebase)));
 
     // Press POV LEFT to nudge the robot left
-    driverController
-        .povLeft()
-        .whileTrue(
-            Commands.startEnd(
-                () -> {
-                  m_drivebase.runVelocity(
-                      new ChassisSpeeds(Units.inchesToMeters(0.), Units.inchesToMeters(11.0), 0.));
-                },
-                // Stop when command ended
-                m_drivebase::stop,
-                m_drivebase));
+    // driverController
+    //     .povLeft()
+    //     .whileTrue(
+    //         Commands.startEnd(
+    //             () -> {
+    //               m_drivebase.runVelocity(
+    //                   new ChassisSpeeds(Units.inchesToMeters(0.), Units.inchesToMeters(11.0),
+    // 0.));
+    //             },
+    //             // Stop when command ended
+    //             m_drivebase::stop,
+    //             m_drivebase));
 
     if (Constants.getMode() == Mode.SIM) {
       // IN SIMULATION ONLY:

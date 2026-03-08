@@ -16,6 +16,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -31,6 +32,16 @@ public class Turret extends RBSISubsystem {
   private final TurretIO io;
   private final TurretIOInputsAutoLogged inputs = new TurretIOInputsAutoLogged();
 
+  public enum TurretState {
+    AUTO,
+    LEFT,
+    RIGHT,
+    CENTER,
+    HOMING
+  }
+
+  public TurretState state = TurretState.AUTO;
+
   // For Aiming
   private static final double kMinRad = -Math.PI / 2.0;
   private static final double kMaxRad = +Math.PI / 2.0;
@@ -43,6 +54,8 @@ public class Turret extends RBSISubsystem {
       new PhotonPoseEstimator(kTagLayout, kTurretToCam);
   private final PhotonCamera turretCam = new PhotonCamera(kTurretCamName);
   private static final double kMechSign = -1.0;
+
+  private static Pose3d hubTarget;
 
   // Limit switches
   @AutoLogOutput
@@ -69,6 +82,12 @@ public class Turret extends RBSISubsystem {
       default:
         io.configureGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         break;
+    }
+
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+      hubTarget = kHubTargetRed;
+    } else {
+      hubTarget = kHubTargetBlue;
     }
 
     // if (!homed){
@@ -104,12 +123,24 @@ public class Turret extends RBSISubsystem {
       System.out.println("No turret pose estimate available.");
     } else {
       Logger.recordOutput("Turret/TurretPose", visionEst.get().estimatedPose);
-      aimAtTarget(
-          visionEst.get().estimatedPose,
-          kHubTargetBlue,
-          !leftLimitSwitch.get(),
-          !rightLimitSwitch.get());
+      if (state == TurretState.AUTO) {
+        aimAtTarget(
+            visionEst.get().estimatedPose,
+            hubTarget,
+            !leftLimitSwitch.get(),
+            !rightLimitSwitch.get());
+      }
     }
+
+    if (state == TurretState.RIGHT) {
+      runPosition(1.48);
+    } else if (state == TurretState.LEFT) {
+      runPosition(-1.35);
+    } else if (state == TurretState.CENTER) {
+      runPosition(0.0);
+    }
+
+    Logger.recordOutput("Turret/State", state);
   }
 
   /** Run open loop at the specified voltage. */
@@ -142,6 +173,7 @@ public class Turret extends RBSISubsystem {
             () -> {
               homing = true;
               homed = false;
+              setState(TurretState.HOMING);
             },
             this),
         Commands.repeatingSequence(Commands.runOnce(() -> runVolts(0.3)))
@@ -157,6 +189,7 @@ public class Turret extends RBSISubsystem {
             .andThen(
                 () -> {
                   runPosition(0.0);
+                  setState(TurretState.AUTO);
                 }));
   }
 
@@ -217,5 +250,9 @@ public class Turret extends RBSISubsystem {
 
   public void setHoming(boolean state) {
     homing = state;
+  }
+
+  public void setState(TurretState state) {
+    this.state = state;
   }
 }
