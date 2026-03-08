@@ -202,7 +202,7 @@ public class RobotContainer {
         m_accel = new Accelerometer(m_imu);
         m_intake = new Intake(new IntakeIOTalonFX());
         m_kicker = new Kicker(new KickerIOTalonFX());
-        m_shooter = new Shooter(new ShooterIOTalonFX());
+        m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
         sweep = null;
         break;
 
@@ -215,7 +215,7 @@ public class RobotContainer {
         m_flywheel = new Flywheel(new FlywheelIOSim());
         m_intake = new Intake(new IntakeIOTalonFX());
         m_kicker = new Kicker(new KickerIOTalonFX());
-        m_shooter = new Shooter(new ShooterIOTalonFX());
+        m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
 
         // ---------------- Vision IOs (robot code) ----------------
         var cams = frc.robot.Constants.Cameras.ALL;
@@ -262,7 +262,7 @@ public class RobotContainer {
         m_intake = new Intake(new IntakeIOTalonFX());
         m_Turret = new Turret(new TurretIOTalonFX(), () -> m_drivebase.getFieldLinearVelocity().getX(), () -> m_drivebase.getFieldLinearVelocity().getY());
         m_kicker = new Kicker(new KickerIOTalonFX());
-        m_shooter = new Shooter(new ShooterIOTalonFX());
+        m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
         sweep = null;
         break;
     }

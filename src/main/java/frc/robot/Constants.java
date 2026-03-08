@@ -256,7 +256,7 @@ public final class Constants {
     // TODO: power port
     public static final RobotDeviceId TURRET = new RobotDeviceId(21, CANBuses.DRIVE, 10);
 
-    public static final RobotDeviceId Shooter = new RobotDeviceId(22, CANBuses.RIO, 10);
+    public static final RobotDeviceId SHOOTER = new RobotDeviceId(22, CANBuses.RIO, 10);
 
     public static final RobotDeviceId Kicker = new RobotDeviceId(23, CANBuses.RIO, 9);
 
@@ -445,6 +445,9 @@ public final class Constants {
     public static final MotorIdleMode kShooterIdleMode = MotorIdleMode.COAST;
     public static final double maxCurrent = 0;
     public static final double maxVelocity = 0;
+
+    public static final double kShooterClosedLoopRampPeriod = 0.15; // seconds
+    public static final double kShooterOpenLoopRampPeriod = 0.25;
 
     // need feed forward loop
 
