@@ -42,6 +42,7 @@ public class Turret extends RBSISubsystem {
   private final PhotonPoseEstimator photonEstimator =
       new PhotonPoseEstimator(kTagLayout, kTurretToCam);
   private final PhotonCamera turretCam = new PhotonCamera(kTurretCamName);
+  private static final double kMechSign = -1.0;
 
   // Limit switches
   @AutoLogOutput
@@ -81,27 +82,31 @@ public class Turret extends RBSISubsystem {
     io.updateInputs(inputs);
     Logger.processInputs("Turret", inputs);
 
-    // TODO: left limit behavior checking
-    // if (leftLimitSwitch.get()) {
-    //   io.setPosition(-Math.PI / 2);
-    // }
-
-    if (!rightLimitSwitch.get()) {
-      io.setPosition(Math.PI / 2);
+    var result = turretCam.getLatestResult();
+    var visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
+    boolean multiTag = visionEst.isPresent();
+    if (visionEst.isEmpty()) {
+      visionEst = photonEstimator.estimateLowestAmbiguityPose(result);
     }
 
-    var visionEst = photonEstimator.estimateCoprocMultiTagPose(turretCam.getLatestResult());
-    if (visionEst.isEmpty()) {
-      visionEst = photonEstimator.estimateLowestAmbiguityPose(turretCam.getLatestResult());
+    boolean visionGood = false;
+    if (visionEst.isPresent()) {
+      if (multiTag) {
+        visionGood = true;
+      } else if (result.hasTargets()) {
+        double amb = result.getBestTarget().getPoseAmbiguity();
+        visionGood = amb >= 0.0 && amb < 0.15; // tune
+      }
     }
 
-    if (visionEst.isEmpty()) {
+    if (visionEst.isEmpty() || !visionGood) {
       // TODO: Search or use robot odometry
       System.out.println("No turret pose estimate available.");
     } else {
+      Logger.recordOutput("Turret/TurretPose", visionEst.get().estimatedPose);
       aimAtTarget(
           visionEst.get().estimatedPose,
-          kHubTarget,
+          kHubTargetBlue,
           !leftLimitSwitch.get(),
           !rightLimitSwitch.get());
     }
@@ -143,9 +148,10 @@ public class Turret extends RBSISubsystem {
             .until(() -> !rightLimitSwitch.get())
             .andThen(
                 () -> {
+                  io.stop();
+                  io.setPosition(Math.PI / 2);
                   homed = true;
                   homing = false;
-                  io.stop();
                 },
                 this)
             .andThen(
@@ -174,42 +180,39 @@ public class Turret extends RBSISubsystem {
       Pose3d targetField,
       boolean leftLimitPressed,
       boolean rightLimitPressed) {
-    if (turretPoseField != null) {
-      Pose3d turretPose = turretPoseField;
+    // 1) Desired field yaw to target
+    double dx = targetField.getX() - turretPoseField.getX();
+    double dy = targetField.getY() - turretPoseField.getY();
+    double desiredFieldYaw = Math.atan2(dy, dx);
 
-      // 1) Desired field yaw to target
-      double dx = targetField.getX() - turretPose.getX();
-      double dy = targetField.getY() - turretPose.getY();
-      double desiredFieldYaw = Math.atan2(dy, dx);
+    // 2) Current turret field yaw (from vision pose)
+    double turretFieldYaw = turretPoseField.getRotation().getZ();
 
-      // 2) Current turret field yaw (from vision pose)
-      double turretFieldYaw = turretPose.getRotation().getZ(); // radians
+    // 3) Current turret mechanical angle (radians)
+    double currentMechRad = inputs.positionRad;
 
-      // 3) Current turret mechanical angle (from encoder, what MotionMagic uses)
-      double currentMechRad = inputs.positionRad;
+    // 4) Field yaw at mechanical zero
+    double fieldYawAtZeroNow = MathUtil.angleModulus(turretFieldYaw - kMechSign * currentMechRad);
 
-      // 4) Compute field yaw at mechanical zero *this cycle*:
-      //    psi0 = psi_t - theta
-      double fieldYawAtZeroNow = MathUtil.angleModulus(turretFieldYaw - currentMechRad);
+    // 5) Desired mechanical setpoint
+    double desiredMechRad = kMechSign * MathUtil.angleModulus(desiredFieldYaw - fieldYawAtZeroNow);
 
-      // 5) Desired mechanical angle:
-      //    theta_des = wrap(psi_des - psi0)
-      double desiredMechRad = MathUtil.angleModulus(desiredFieldYaw - fieldYawAtZeroNow);
+    // 6) Clamp to range
+    double clampedMechRad = MathUtil.clamp(desiredMechRad, kMinCmdRad, kMaxCmdRad);
 
-      // 6) Clamp to 180° turret
-      double clampedMechRad = MathUtil.clamp(desiredMechRad, kMinCmdRad, kMaxCmdRad);
+    // 7) Limit switch interlock
+    if (leftLimitPressed && clampedMechRad < currentMechRad) clampedMechRad = currentMechRad;
+    if (rightLimitPressed && clampedMechRad > currentMechRad) clampedMechRad = currentMechRad;
 
-      // 7) Limit switch safety (only allow away from the pressed switch)
-      if (leftLimitPressed && clampedMechRad < currentMechRad) clampedMechRad = currentMechRad;
-      if (rightLimitPressed && clampedMechRad > currentMechRad) clampedMechRad = currentMechRad;
+    lastSetpointRad = clampedMechRad;
+    Logger.recordOutput("Turret/lastSetpointRad", lastSetpointRad);
+    Logger.recordOutput("Turret/currentMechRad", currentMechRad);
+    Logger.recordOutput("Turret/turretFieldYaw", turretFieldYaw);
+    Logger.recordOutput("Turret/fieldYawAtZeroNow", fieldYawAtZeroNow);
+    Logger.recordOutput("Turret/desiredFieldYaw", desiredFieldYaw);
+    Logger.recordOutput("Turret/desiredMechRad", desiredMechRad);
 
-      lastSetpointRad = clampedMechRad;
-      Logger.recordOutput("Turret/lastSetpointRad", lastSetpointRad);
-    }
-
-    // 8) Motion Magic position setpoint is the mechanical radians
-    // runPosition(lastSetpointRad);
-    System.out.println("Turret aiming at: " + lastSetpointRad);
+    runPosition(lastSetpointRad);
   }
 
   public void setHoming(boolean state) {

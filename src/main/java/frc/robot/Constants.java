@@ -165,8 +165,8 @@ public final class Constants {
 
   public static final class TurretConstants {
     public static MotorIdleMode kTurretIdleMode = MotorIdleMode.BRAKE;
-    public static int kRightLimitDIOChannel = 9;
-    public static int kLeftLimitDIOChannel = 8;
+    public static int kRightLimitDIOChannel = 0;
+    public static int kLeftLimitDIOChannel = 1;
 
     public static double kTurretGearRatio = 10.0;
 
@@ -175,11 +175,20 @@ public final class Constants {
 
     public static final String kTurretCamName = "TurretCam";
     public static final Transform3d kTurretToCam =
-        new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0, 0, 0));
-    public static final Pose3d kHubTarget =
+        new Transform3d(
+            new Translation3d(0.0, Units.inchesToMeters(4.5), 0.0),
+            new Rotation3d(0, Units.degreesToRadians(-40), 0));
+    public static final Pose3d kHubTargetRed =
         new Pose3d(
             new Translation3d(
                 Units.inchesToMeters(469.11),
+                Units.inchesToMeters(158.84),
+                Units.inchesToMeters(44.25)),
+            new Rotation3d(0, 0, 0));
+    public static final Pose3d kHubTargetBlue =
+        new Pose3d(
+            new Translation3d(
+                Units.inchesToMeters(182.11),
                 Units.inchesToMeters(158.84),
                 Units.inchesToMeters(44.25)),
             new Rotation3d(0, 0, 0));
