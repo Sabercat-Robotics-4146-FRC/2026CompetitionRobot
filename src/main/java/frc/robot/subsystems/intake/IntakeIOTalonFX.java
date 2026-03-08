@@ -74,15 +74,14 @@ public class IntakeIOTalonFX implements IntakeIO {
   @Override
   public void setOutputRoller() {
     roller.setControl(voltageRequest);
+    System.out.println("third");
   }
 
   public void setRetraction() {
-    System.out.println("3rd test");
     extender.setControl(voltageRequestOne);
   }
 
   public void setExtender() {
-    System.out.println("3rd test");
     extender.setControl(voltageRequestTwo);
   }
 

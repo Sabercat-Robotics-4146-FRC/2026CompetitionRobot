@@ -32,46 +32,32 @@ public class Intake extends SubsystemBase {
 
   // false if limit switch is pressed, true if not pressed
   public void extendIntake() {
-    if (isRetracted()) {
-      System.out.println("second test");
-      io.setExtender(); // tune this number
-    } else {
-      io.stopExtender();
-      io.setExtenderMode(true);
-    }
-  }
-
-  public void stopExtender() {
-    io.stopExtender();
+    io.setExtender(); // tune this number
   }
 
   // only run intake if roller is down
   public void runIntake() {
-      io.setOutputRoller();
-    
+    io.setOutputRoller();
   }
 
   public void stopIntake() {
     io.stopRoller();
   }
 
+  public void stopExtender() {
+    io.stopExtender();
+    io.setExtenderMode(false);
+  }
+
   public void retractIntake() {
-    io.stopRoller();
-    if (isExtended()) {
-      io.setRetraction();
-      System.out.println("second test");
-    } else if (isRetracted()) {
-      io.stopExtender();
-      io.setExtenderMode(false);
-    }
+    io.setRetraction();
   }
 
   @Override
   public void periodic() {
-
-    System.out.println("Limit Switch Retracted" + limitSwitchRetracted.get());
-    System.out.println("Limit Switch Extended" + limitSwitchExtended.get());
-    // io.setOutputExtender(0.3);
-    System.out.println("angle" + io.getPosition());
+    // extendIntake();
+    // System.out.println("Limit Switch Retracted" + limitSwitchRetracted.get());
+    // System.out.println("Limit Switch Extended" + limitSwitchExtended.get());
+    // System.out.println("angle" + io.getPosition());
   }
 }

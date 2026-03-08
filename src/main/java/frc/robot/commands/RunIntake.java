@@ -13,8 +13,9 @@ public class RunIntake extends Command {
 
   @Override
   public void execute() {
-   
-      intake.runIntake();
+
+    intake.runIntake();
+    System.out.println("first");
   }
 
   @Override
