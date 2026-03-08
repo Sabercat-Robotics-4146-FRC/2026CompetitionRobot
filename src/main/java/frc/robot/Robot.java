@@ -119,22 +119,31 @@ public class Robot extends LoggedRobot {
     }
   }
 
-  // /** This function is called periodically during all modes. */
-  // @Override
-  // public void robotPeriodic() {
+  // This function is called periodically during all modes.
 
-  //   // Run all virtual subsystems each time through the loop
-  //   VirtualSubsystem.periodicAll();
+  /*
+  @Override
+  public void robotPeriodic() {
+    // Switch thread to high priority to improve loop timing
+    Threads.setCurrentThreadPriority(true, 99);
 
-  //   // Runs the Scheduler. This is responsible for polling buttons, adding
-  //   // newly-scheduled commands, running already-scheduled commands, removing
-  //   // finished or interrupted commands, and running subsystem periodic() methods.
-  //   // This must be called from the robot's periodic block in order for anything in
-  //   // the Command-based framework to work.
-  //   CommandScheduler.getInstance().run();
-  // }
+    // Run all virtual subsystems each time through the loop
+    VirtualSubsystem.periodicAll();
 
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled commands, running already-scheduled commands, removing
+    // finished or interrupted commands, and running subsystem periodic() methods.
+    // This must be called from the robot's periodic block in order for anything in
+    // the Command-based framework to work.
+    CommandScheduler.getInstance().run();
+
+    // Return to normal thread priority
+    Threads.setCurrentThreadPriority(false, 10);
+  } */
+
+  /*
   /** TESTING VERSION OF ROBOTPERIODIC FOR OVERRUN SOURCES */
+
   @Override
   public void robotPeriodic() {
     final long t0 = System.nanoTime();

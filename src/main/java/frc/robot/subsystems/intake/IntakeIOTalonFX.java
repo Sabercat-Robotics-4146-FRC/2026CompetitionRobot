@@ -3,20 +3,23 @@ package frc.robot.subsystems.intake;
 import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.Constants.RobotDevices.*;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Current;
 import frc.robot.Constants;
 import frc.robot.util.RBSIEnum.CTREPro;
 
 public class IntakeIOTalonFX implements IntakeIO {
 
   public enum Position {
-    HOMED(110),
-    INTAKE(-4);
+    HOMED(5.037),
+    INTAKE(-24.8);
 
     private final double degrees;
 
@@ -31,15 +34,17 @@ public class IntakeIOTalonFX implements IntakeIO {
 
   private final TalonFX roller;
   private final TalonFX extender;
-  private final VoltageOut voltageRequest = new VoltageOut(6);
+  private final VoltageOut voltageRequest = new VoltageOut(9);
   private final VoltageOut voltageRequestOne = new VoltageOut(1.5);
   private final VoltageOut voltageRequestTwo = new VoltageOut(-1.5);
-  private final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(2);
+  private MotionMagicVoltage motionMagicRequest;
   public final int[] powerPorts = {IntakeRoller.getPowerPort(), IntakeExtender.getPowerPort()};
 
   private final TalonFXConfiguration config = new TalonFXConfiguration();
   private final TalonFXConfiguration secondConfig = new TalonFXConfiguration();
   private final boolean isCTREPro = (Constants.getPhoenixPro() == CTREPro.LICENSED);
+
+  private final StatusSignal<Current> supplyCurrentAmps;
 
   // private static final AngularVelocity kMaxPivotSpeed =
   // KrakenX60.kFreeSpeed.div(kPivotReduction);
@@ -69,6 +74,15 @@ public class IntakeIOTalonFX implements IntakeIO {
     secondConfig.MotionMagic.MotionMagicAcceleration = 50; // tune it
 
     extender.getConfigurator().apply(secondConfig);
+
+    supplyCurrentAmps = extender.getSupplyCurrent();
+  }
+
+  @Override
+  public void updateInputs(IntakeIOInputs inputs) {
+    boolean connected = BaseStatusSignal.refreshAll(supplyCurrentAmps).isOK();
+    inputs.supplyCurrent =
+        new double[] {supplyCurrentAmps.getValueAsDouble(), supplyCurrentAmps.getValueAsDouble()};
   }
 
   @Override
@@ -77,11 +91,17 @@ public class IntakeIOTalonFX implements IntakeIO {
     System.out.println("third");
   }
 
+  @Override
   public void setRetraction() {
+    // motionMagicRequest = new MotionMagicVoltage(5.037);
+    // extender.setControl(motionMagicRequest);
     extender.setControl(voltageRequestOne);
   }
 
+  @Override
   public void setExtender() {
+    // motionMagicRequest = new MotionMagicVoltage(-29.8);
+    // extender.setControl(motionMagicRequest);
     extender.setControl(voltageRequestTwo);
   }
 

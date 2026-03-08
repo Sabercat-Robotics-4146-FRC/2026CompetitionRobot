@@ -7,12 +7,10 @@ public interface IntakeIO extends RBSIIO {
 
   @AutoLog
   public static class IntakeIOInputs {
-    public double positionRad = 0.0;
-    public double velocityRadPerSec = 0.0;
-    public double[] currentAmps = new double[] {};
+    public double[] supplyCurrent = new double[] {};
   }
 
-  public default void updateInputs(IntakeIO io) {}
+  public default void updateInputs(IntakeIOInputs io) {}
 
   public default void setOutputExtender(double output) {}
 

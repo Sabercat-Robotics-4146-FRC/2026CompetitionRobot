@@ -5,7 +5,7 @@ import frc.robot.subsystems.intake.Intake;
 
 public class PivotCommand extends Command {
   private final Intake intake;
-  private boolean pivotState;
+  public boolean pivotState;
 
   public PivotCommand(Intake intake) {
     this.intake = intake;

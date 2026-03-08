@@ -6,9 +6,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
   private final IntakeIOTalonFX io;
-  private final DigitalInput limitSwitchExtended =
-      new DigitalInput(3); // true when hopper is extended
-  private final DigitalInput limitSwitchRetracted = new DigitalInput(2);
+  private final DigitalInput limitSwitchExtended = new DigitalInput(2);
+  private final DigitalInput limitSwitchRetracted = new DigitalInput(3);
   private final Debouncer debouncerOne = new Debouncer(0.05);
   private final Debouncer debouncerTwo = new Debouncer(0.05);
 
@@ -18,25 +17,23 @@ public class Intake extends SubsystemBase {
     io.setExtenderMode(false);
   }
 
-  // returns true if limit switch 1 is not being held
+  // returns true if retracted
   public boolean isExtended() {
-    return !debouncerOne.calculate(limitSwitchExtended.get())
-        && debouncerTwo.calculate(limitSwitchRetracted.get());
+    return !debouncerOne.calculate(limitSwitchExtended.get());
   }
 
   // return true if limit switch is being held
   public boolean isRetracted() {
-    return debouncerTwo.calculate(limitSwitchRetracted.get())
-        && !debouncerOne.calculate(limitSwitchExtended.get());
+    return !debouncerTwo.calculate(limitSwitchRetracted.get());
   }
 
-  // false if limit switch is pressed, true if not pressed
   public void extendIntake() {
-    io.setExtender(); // tune this number
+    io.setExtender();
   }
 
   // only run intake if roller is down
   public void runIntake() {
+
     io.setOutputRoller();
   }
 
@@ -46,7 +43,6 @@ public class Intake extends SubsystemBase {
 
   public void stopExtender() {
     io.stopExtender();
-    io.setExtenderMode(false);
   }
 
   public void retractIntake() {
@@ -55,9 +51,8 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // extendIntake();
-    // System.out.println("Limit Switch Retracted" + limitSwitchRetracted.get());
-    // System.out.println("Limit Switch Extended" + limitSwitchExtended.get());
-    // System.out.println("angle" + io.getPosition());
+
+    System.out.println("Limit Switch Retracted" + isRetracted());
+    System.out.println("Limit Switch Extended" + isExtended());
   }
 }

@@ -40,6 +40,8 @@ import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AutopilotCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PivotCommand;
+import frc.robot.commands.RunIntake;
+import frc.robot.commands.StopIntake;
 import frc.robot.subsystems.accelerometer.Accelerometer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveConstants;
@@ -351,12 +353,11 @@ public class RobotContainer {
 
     // ** Example Commands -- Remap, remove, or change as desired **
     // Press B button while driving --> ROBOT-CENTRIC
-    driverController.b().onTrue(new PivotCommand(m_intake));
+    driverController.b().whileTrue(new RunIntake(m_intake));
+    driverController.b().whileFalse(new StopIntake(m_intake));
 
     // Press A button -> BRAKE
-    driverController
-        .a()
-        .whileTrue(Commands.runOnce(() -> m_drivebase.setMotorBrake(true), m_drivebase));
+    driverController.a().onTrue(new PivotCommand(m_intake));
 
     // Press X button --> Stop with wheels in X-Lock position
     driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));
