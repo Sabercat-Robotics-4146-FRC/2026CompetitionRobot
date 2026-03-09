@@ -1,20 +1,19 @@
 package frc.robot.subsystems.climb;
 
+import frc.robot.util.RBSIIO;
 import org.littletonrobotics.junction.AutoLog;
 
-public interface ClimbIO {
+public interface ClimbIO extends RBSIIO {
 
   // -- Power Ports used by Climb -- //
   public final int[] powerPorts = {};
 
   @AutoLog
   public static class ClimbIOInputs {
-    public boolean motorConnected = true;
+    public double positionRad = 0.0;
     public double velocityRadPerSec = 0.0;
-    public double[] appliedVolts = new double[] {};
-    public double[] torqueCurrentAmps = new double[] {};
-    public double[] supplyCurrentAmps = new double[] {};
-    public double[] tempCelsius = new double[] {};
+    public double appliedVolts = 0.0;
+    public double[] currentAmps = new double[] {};
   }
 
   default void updateInputs(ClimbIOInputs inputs) {}
@@ -27,6 +26,9 @@ public interface ClimbIO {
 
   default void setMode(boolean enabled) {}
 
-  default void goHome(double percent) {}
-  ;
+  default void goHome() {}
+
+  default double getPosition() {
+    return 27.34;
+  }
 }
