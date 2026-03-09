@@ -249,7 +249,7 @@ public final class Constants {
     public static final RobotDeviceId FLYWHEEL_LEADER = new RobotDeviceId(3, CANBuses.RIO, 8);
     public static final RobotDeviceId FLYWHEEL_FOLLOWER = new RobotDeviceId(4, CANBuses.RIO, 9);
 
-    public static final RobotDeviceId CLIMB_MOTOR = new RobotDeviceId(25, CANBuses.RIO, 10);
+    public static final RobotDeviceId CLIMB_MOTOR = new RobotDeviceId(24, CANBuses.DRIVE, 10);
 
     // intake
     public static final RobotDeviceId IntakeRoller = new RobotDeviceId(25, CANBuses.DRIVE, 3);
