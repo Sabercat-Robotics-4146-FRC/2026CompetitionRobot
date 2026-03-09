@@ -5,7 +5,6 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.RobotDevices;
 import frc.robot.util.LoggedTunableNumber;
 
@@ -37,7 +36,7 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void goHome(double volts) {
-    voltage = 6; 
+    voltage = -6;
     climbMotor.setControl(voltageRequest);
     setMode(true);
   }
@@ -54,7 +53,7 @@ public class ClimbIOTalonFX implements ClimbIO {
     config.Slot0.kS = kS.get(); // static friction
     config.Slot0.kV = kV.get(); // velocity gain
 
-    config.MotionMagic.MotionMagicCruiseVelocity = 100; // tune it
+    config.MotionMagic.MotionMagicCruiseVelocity = 200; // tune it
     config.MotionMagic.MotionMagicAcceleration = 100; // tune it
 
     climbMotor.getConfigurator().apply(config);
@@ -62,13 +61,13 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void goUp() {
-    voltage = - 6; 
+    voltage = 6;
     configureClimbMotor();
     climbMotor.setControl(voltageRequest);
-      /* 
-        motionMagicVoltage
-            .withPosition(Units.radiansToRotations(hangedPosition))
-            .withFeedForward(0));*/
+    /*
+    motionMagicVoltage
+        .withPosition(Units.radiansToRotations(hangedPosition))
+        .withFeedForward(0));*/
   }
 
   public double getPosition() {

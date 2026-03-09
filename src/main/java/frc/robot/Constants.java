@@ -253,7 +253,7 @@ public final class Constants {
     public static final RobotDeviceId IntakeRoller = new RobotDeviceId(25, CANBuses.DRIVE, 3);
     public static final RobotDeviceId IntakeExtender = new RobotDeviceId(26, CANBuses.DRIVE, 9);
 
-    public static final RobotDeviceId CLIMB_MOTOR = new RobotDeviceId(25, CANBuses.RIO, 10);
+    public static final RobotDeviceId CLIMB_MOTOR = new RobotDeviceId(24, CANBuses.DRIVE, 10);
 
     // TODO: power port
     public static final RobotDeviceId TURRET = new RobotDeviceId(21, CANBuses.DRIVE, 10);
@@ -262,7 +262,7 @@ public final class Constants {
     // This is where digital I/O feedback devices are defined
     // Example:
     // public static final int ELEVATOR_BOTTOM_LIMIT = 3;
-    public static final int CLIMB_LIMIT_SWITCH = 0;
+    public static final int CLIMB_LIMIT_SWITCH = 4;
 
     /* LINEAR SERVO PWM CHANNELS */
     // This is where PWM-controlled devices (actuators, servos, pneumatics, etc.)

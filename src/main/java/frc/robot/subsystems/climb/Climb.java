@@ -8,7 +8,7 @@ import frc.robot.Constants.RobotDevices;
 public class Climb extends SubsystemBase {
 
   private DigitalInput limitSwitch = new DigitalInput(RobotDevices.CLIMB_LIMIT_SWITCH);
-  private Debouncer debouncer = new Debouncer(0.1);
+  private Debouncer debouncer = new Debouncer(0.05);
   private ClimbIOTalonFX motor;
   private boolean isHomed = false;
 
@@ -19,7 +19,7 @@ public class Climb extends SubsystemBase {
 
   // retract climb all the way down
   public boolean isHomed() {
-    boolean isHomed = !debouncer.calculate(limitSwitch.get());
+    isHomed = !debouncer.calculate(limitSwitch.get());
     return isHomed;
   }
 
@@ -56,5 +56,11 @@ public class Climb extends SubsystemBase {
 
   public boolean isAtHangedPosition() {
     return motor.getPosition() == ClimbIOTalonFX.hangedPosition;
+  }
+
+  public void periodic() {
+
+    System.out.println("limit switch value" + limitSwitch.get());
+    System.out.println("position" + motor.getPosition());
   }
 }
