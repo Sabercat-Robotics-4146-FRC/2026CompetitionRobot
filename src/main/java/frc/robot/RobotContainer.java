@@ -39,6 +39,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AutopilotCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.PivotCommand;
+import frc.robot.commands.RunIntake;
+import frc.robot.commands.StopIntake;
 import frc.robot.subsystems.accelerometer.Accelerometer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveConstants;
@@ -47,6 +50,8 @@ import frc.robot.subsystems.flywheel_example.FlywheelIO;
 import frc.robot.subsystems.flywheel_example.FlywheelIOSim;
 import frc.robot.subsystems.imu.Imu;
 import frc.robot.subsystems.imu.ImuIOSim;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeIOTalonFX;
 import frc.robot.subsystems.vision.CameraSweepEvaluator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -91,6 +96,8 @@ public class RobotContainer {
   private final Drive m_drivebase;
 
   private final Flywheel m_flywheel;
+
+  private final Intake m_intake;
 
   // ... Add additional subsystems here (e.g., elevator, arm, etc.)
 
@@ -181,6 +188,7 @@ public class RobotContainer {
         m_flywheel = new Flywheel(new FlywheelIOSim()); // new Flywheel(new FlywheelIOTalonFX());
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReal(m_drivebase));
         m_accel = new Accelerometer(m_imu);
+        m_intake = new Intake(new IntakeIOTalonFX());
         sweep = null;
         break;
 
@@ -190,6 +198,7 @@ public class RobotContainer {
         m_imu = new Imu(new ImuIOSim());
         m_drivebase = new Drive(m_imu);
         m_flywheel = new Flywheel(new FlywheelIOSim());
+        m_intake = new Intake(new IntakeIOTalonFX());
 
         // ---------------- Vision IOs (robot code) ----------------
         var cams = frc.robot.Constants.Cameras.ALL;
@@ -233,14 +242,17 @@ public class RobotContainer {
         m_flywheel = new Flywheel(new FlywheelIO() {});
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReplay());
         m_accel = new Accelerometer(m_imu);
+        m_intake = new Intake(new IntakeIOTalonFX());
         sweep = null;
         break;
     }
 
+    // NamedCommands.registerCommand("drive to pose", new AutopilotCommands(m_drivebase, new
+    // Pose2d(1.115, 5.945, 180)));
+
     // Init all CAN busses specified in the `Constants.CANBuses` class
     RBSICANBusRegistry.initReal(Constants.CANBuses.ALL);
     canHealth = Arrays.stream(Constants.CANBuses.ALL).map(RBSICANHealth::new).toList();
-
     // In addition to the initial battery capacity from the Dashbaord, ``RBSIPowerMonitor`` takes
     // all the non-drivebase subsystems for which you wish to have power monitoring; DO NOT
     // include ``m_drivebase``, as that is automatically monitored.
@@ -341,27 +353,17 @@ public class RobotContainer {
 
     // ** Example Commands -- Remap, remove, or change as desired **
     // Press B button while driving --> ROBOT-CENTRIC
-    driverController
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                () ->
-                    DriveCommands.robotRelativeDrive(
-                        m_drivebase,
-                        () -> -driveStickY.value(),
-                        () -> -driveStickX.value(),
-                        () -> turnStickX.value()),
-                m_drivebase));
+    driverController.b().whileTrue(new RunIntake(m_intake));
+    driverController.b().whileFalse(new StopIntake(m_intake));
 
     // Press A button -> BRAKE
-    driverController
-        .a()
-        .whileTrue(Commands.runOnce(() -> m_drivebase.setMotorBrake(true), m_drivebase));
+    driverController.a().onTrue(new PivotCommand(m_intake));
 
     // Press X button --> Stop with wheels in X-Lock position
     driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));
 
-    // Press Y button --> Manually Re-Zero the Gyro
+    // Press Y button --
+    // > Manually Re-Zero the Gyro
     driverController
         .y()
         .onTrue(

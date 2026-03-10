@@ -9,6 +9,12 @@
           "data": {
             "pathName": "Consistancy Test"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "test 2"
+          }
         }
       ]
     }

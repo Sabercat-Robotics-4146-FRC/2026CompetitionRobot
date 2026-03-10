@@ -31,7 +31,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.drive.Drive;
 import org.littletonrobotics.junction.Logger;
 
-public class AutopilotCommands {
+public class AutopilotCommands extends Command {
 
   /**
    * AutoPilot Command Factory -- just reference pose
