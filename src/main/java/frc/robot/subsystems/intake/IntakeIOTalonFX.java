@@ -54,8 +54,8 @@ public class IntakeIOTalonFX implements IntakeIO {
     extender = new TalonFX(IntakeExtender.getDeviceNumber(), IntakeExtender.getCANBus());
 
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
-    config.CurrentLimits.StatorCurrentLimit = 40;
-    config.CurrentLimits.StatorCurrentLimitEnable = true;
+    config.CurrentLimits.SupplyCurrentLimit = 60;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
 
     roller.getConfigurator().apply(config);
 

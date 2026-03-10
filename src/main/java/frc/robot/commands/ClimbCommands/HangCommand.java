@@ -10,7 +10,7 @@ public class HangCommand extends SequentialCommandGroup {
   public HangCommand(RobotContainer container, Climb climb) {
     addCommands(
         new ExtendCommand(climb),
-        // drive to correct position command
+        // new AutoPilotCommands(new AutoPIlot)
         new RetractCommand(climb));
   }
 }

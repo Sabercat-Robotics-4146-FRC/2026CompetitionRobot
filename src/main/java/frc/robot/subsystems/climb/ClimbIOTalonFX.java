@@ -69,7 +69,7 @@ public class ClimbIOTalonFX implements ClimbIO {
 
   @Override
   public void goHome() {
-    climbMotor.setControl(new VoltageOut(-9));
+    climbMotor.setControl(new VoltageOut(9));
     setMode(true);
   }
 
@@ -77,16 +77,19 @@ public class ClimbIOTalonFX implements ClimbIO {
     TalonFXConfiguration config = new TalonFXConfiguration();
 
     // pid gains
-    config.Slot0.kP = kP.get(); // tune this
-    config.Slot0.kI = kI.get();
-    config.Slot0.kD = kD.get();
+    config.Slot0.kP = 0.5; // tune this
+    config.Slot0.kI = 0;
+    config.Slot0.kD = 0.2;
 
     // Feedforward (helps shooter reach speed faster)
-    config.Slot0.kS = kS.get(); // static friction
-    config.Slot0.kV = kV.get(); // velocity gain
+    config.Slot0.kS = 0.1; // static friction
+    config.Slot0.kV = 0.1; // velocity gain
 
-    config.MotionMagic.MotionMagicCruiseVelocity = 200; // tune it
-    config.MotionMagic.MotionMagicAcceleration = 100; // tune it
+    config.CurrentLimits.SupplyCurrentLimit = 40;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    // config.MotionMagic.MotionMagicCruiseVelocity = 200; // tune it
+    // config.MotionMagic.MotionMagicAcceleration = 100; // tune it
 
     climbMotor.getConfigurator().apply(config);
   }
@@ -94,7 +97,7 @@ public class ClimbIOTalonFX implements ClimbIO {
   @Override
   public void goUp() {
 
-    climbMotor.setControl(new VoltageOut(9));
+    climbMotor.setControl(new VoltageOut(-2));
     /*
     motionMagicVoltage
         .withPosition(Units.radiansToRotations(hangedPosition))

@@ -67,9 +67,8 @@ public class Climb extends SubsystemBase {
   }
 
   public void periodic() {
-
     motor.updateInputs(inputs);
     System.out.println("limit switch value" + limitSwitch.get());
-    System.out.println("position" + motor.getPosition());
+    System.out.println("position" + inputs.positionRad);
   }
 }
