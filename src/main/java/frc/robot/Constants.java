@@ -486,23 +486,23 @@ public final class Constants {
     // (ONLY USED FOR PHOTONVISION -- Limelight: configure in web UI instead)
     // Example Cameras are mounted in the back corners, 18" up from the floor, facing sideways
     public static final CameraConfig[] ALL = {
-      new CameraConfig(
-          "TurretCam",
-          new Transform3d(
-              Inches.of(0.973),
-              Inches.of(5.075),
-              Inches.of(5.478),
-              new Rotation3d(Math.toRadians(0.0), Math.toRadians(115), Math.toRadians(180))),
-          1.0,
-          new SimCameraProperties() {
-            {
-              setCalibration(1280, 800, Rotation2d.fromDegrees(120));
-              setCalibError(0.25, 0.08);
-              setFPS(30);
-              setAvgLatencyMs(20);
-              setLatencyStdDevMs(5);
-            }
-          }),
+      /*new CameraConfig(
+      "TurretCam",
+      new Transform3d(
+          Inches.of(0.973),
+          Inches.of(5.075),
+          Inches.of(5.478),
+          new Rotation3d(Math.toRadians(0.0), Math.toRadians(115), Math.toRadians(180))),
+      1.0,
+      new SimCameraProperties() {
+        {
+          setCalibration(1280, 800, Rotation2d.fromDegrees(120));
+          setCalibError(0.25, 0.08);
+          setFPS(30);
+          setAvgLatencyMs(20);
+          setLatencyStdDevMs(5);
+        }
+      }),*/
       //
       new CameraConfig(
           "ClimbCam",
@@ -510,7 +510,7 @@ public final class Constants {
               Inches.of(-12.661),
               Inches.of(7.259),
               Inches.of(9.778),
-              new Rotation3d(Math.toRadians(0), Math.toRadians(112.5), 205)),
+              new Rotation3d(Math.toRadians(0), Math.toRadians(22.5), -155)),
           1.0,
           new SimCameraProperties() {
             {
@@ -527,7 +527,7 @@ public final class Constants {
               Inches.of(-12.393),
               Inches.of(2.4),
               Inches.of(4.986),
-              new Rotation3d(Math.toRadians(0.0), Math.toRadians(135), Math.toRadians(180))),
+              new Rotation3d(Math.toRadians(0.0), Math.toRadians(-35), Math.toRadians(180))),
           1.0,
           new SimCameraProperties() {
             {
@@ -538,13 +538,13 @@ public final class Constants {
               setLatencyStdDevMs(5);
             }
           }),
-       new CameraConfig(
+      new CameraConfig(
           "HubCam",
           new Transform3d(
               Inches.of(-4.239),
               Inches.of(7.964),
               Inches.of(17.548),
-              new Rotation3d(Math.toRadians(0.0), Math.toRadians(145), Math.toRadians(180))),
+              new Rotation3d(Math.toRadians(0.0), Math.toRadians(0), Math.toRadians(180))),
           1.0,
           new SimCameraProperties() {
             {
