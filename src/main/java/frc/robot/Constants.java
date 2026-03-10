@@ -487,12 +487,12 @@ public final class Constants {
     // Example Cameras are mounted in the back corners, 18" up from the floor, facing sideways
     public static final CameraConfig[] ALL = {
       new CameraConfig(
-          "camera_0",
+          "TurretCam",
           new Transform3d(
-              Inches.of(-4.5),
-              Inches.of(-14.85),
-              Inches.of(25),
-              new Rotation3d(Math.toRadians(0.0), Math.toRadians(-16.9), Math.toRadians(180))),
+              Inches.of(0.973),
+              Inches.of(5.075),
+              Inches.of(5.478),
+              new Rotation3d(Math.toRadians(0.0), Math.toRadians(115), Math.toRadians(180))),
           1.0,
           new SimCameraProperties() {
             {
@@ -505,12 +505,46 @@ public final class Constants {
           }),
       //
       new CameraConfig(
-          "camera_1",
+          "ClimbCam",
           new Transform3d(
-              Inches.of(-3.0),
-              Inches.of(15),
-              Inches.of(22.25),
-              new Rotation3d(Math.toRadians(-5), Math.toRadians(7), 0.0)),
+              Inches.of(-12.661),
+              Inches.of(7.259),
+              Inches.of(9.778),
+              new Rotation3d(Math.toRadians(0), Math.toRadians(112.5), 205)),
+          1.0,
+          new SimCameraProperties() {
+            {
+              setCalibration(1280, 800, Rotation2d.fromDegrees(120));
+              setCalibError(0.25, 0.08);
+              setFPS(30);
+              setAvgLatencyMs(20);
+              setLatencyStdDevMs(5);
+            }
+          }),
+      new CameraConfig(
+          "TrenchCam",
+          new Transform3d(
+              Inches.of(-12.393),
+              Inches.of(2.4),
+              Inches.of(4.986),
+              new Rotation3d(Math.toRadians(0.0), Math.toRadians(135), Math.toRadians(180))),
+          1.0,
+          new SimCameraProperties() {
+            {
+              setCalibration(1280, 800, Rotation2d.fromDegrees(120));
+              setCalibError(0.25, 0.08);
+              setFPS(30);
+              setAvgLatencyMs(20);
+              setLatencyStdDevMs(5);
+            }
+          }),
+       new CameraConfig(
+          "HubCam",
+          new Transform3d(
+              Inches.of(-4.239),
+              Inches.of(7.964),
+              Inches.of(17.548),
+              new Rotation3d(Math.toRadians(0.0), Math.toRadians(145), Math.toRadians(180))),
           1.0,
           new SimCameraProperties() {
             {
