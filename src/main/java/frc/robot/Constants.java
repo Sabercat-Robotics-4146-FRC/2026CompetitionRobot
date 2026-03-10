@@ -252,6 +252,9 @@ public final class Constants {
     public static final RobotDeviceId CLIMB_MOTOR = new RobotDeviceId(24, CANBuses.DRIVE, 10);
 
     // intake
+
+    public static final RobotDeviceId CLIMB_MOTOR = new RobotDeviceId(24, CANBuses.DRIVE, 10);
+
     public static final RobotDeviceId IntakeRoller = new RobotDeviceId(25, CANBuses.DRIVE, 3);
     public static final RobotDeviceId IntakeExtender = new RobotDeviceId(26, CANBuses.DRIVE, 9);
 
@@ -407,7 +410,7 @@ public final class Constants {
 
   public static final class ClimbConstants {
 
-    public static final double kClimbGearRatio = 12.1;
+    public static final double kClimbGearRatio = 80;
 
     public static final double kTorque = 0; // Nm
 
