@@ -38,9 +38,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AutopilotCommands;
 import frc.robot.commands.ClimbCommands.ExtendCommand;
-import frc.robot.commands.ClimbCommands.RetractCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PivotCommand;
+import frc.robot.commands.RunIntake;
+import frc.robot.commands.StopIntake;
 import frc.robot.subsystems.accelerometer.Accelerometer;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.climb.ClimbIOTalonFX;
@@ -367,7 +368,7 @@ public class RobotContainer {
 
     // ** Example Commands -- Remap, remove, or change as desired **
     // Press B button while driving --> ROBOT-CENTRIC
-    /*
+
     driverController.b().whileTrue(new RunIntake(m_intake));
     driverController.b().whileFalse(new StopIntake(m_intake));
 
@@ -390,7 +391,7 @@ public class RobotContainer {
                   m_Turret.setState(TurretState.CENTER);
                 }));
 
-    driverController
+    // driverController
         .povLeft()
         .onTrue(
             Commands.runOnce(

@@ -100,12 +100,10 @@ public class ClimbIOTalonFX implements ClimbIO {
     setMode(true);
   }
 
-  
-
   @Override
   public void goUp() {
 
-    climbMotor.setControl(voltageRequest.withOutput(-3));
+    climbMotor.setControl(voltageRequest.withOutput(3));
     climbMotor.setControl(motionMagicVoltage.withPosition(30));
     setMode(true);
 
