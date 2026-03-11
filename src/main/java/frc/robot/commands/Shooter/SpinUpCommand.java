@@ -8,17 +8,15 @@ public class SpinUpCommand extends Command {
 
   private final Shooter shooter;
 
-   public SpinUpCommand(Shooter s) {
-      this.shooter = s;
-   }
+  public SpinUpCommand(Shooter s) {
+    this.shooter = s;
+  }
 
-   @Override
-   public void execute() {
+  @Override
+  public void execute() {
     shooter.setShooterState(ShooterState.SHOOTING);
-   }
+  }
 
-   @Override
-   public void end(boolean interrupted) {
-   }
-  
+  @Override
+  public void end(boolean interrupted) {}
 }

@@ -38,9 +38,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AutopilotCommands;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.PivotCommand;
-import frc.robot.commands.RunIntake;
-import frc.robot.commands.StopIntake;
+import frc.robot.commands.Intake.PivotCommand;
+import frc.robot.commands.Intake.RunIntake;
+import frc.robot.commands.Intake.StopIntake;
 import frc.robot.subsystems.accelerometer.Accelerometer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveConstants;
@@ -373,8 +373,8 @@ public class RobotContainer {
 
     // ** Example Commands -- Remap, remove, or change as desired **
     // Press B button while driving --> ROBOT-CENTRIC
-    driverController.b().whileTrue(new RunIntake(m_intake));
-    driverController.b().whileFalse(new StopIntake(m_intake));
+    driverController.rightStick().whileTrue(new RunIntake(m_intake));
+    driverController.rightStick().whileFalse(new StopIntake(m_intake));
 
     // Press A button -> BRAKE
     driverController.a().onTrue(Commands.runOnce(() -> m_Turret.Home(), m_Turret));
@@ -418,7 +418,7 @@ public class RobotContainer {
                 }));
 
     // Press X button --> Stop with wheels in X-Lock position
-    driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));
+    //driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));
 
     // Press Y button --> Manually Re-Zero the Gyro
     // driverController

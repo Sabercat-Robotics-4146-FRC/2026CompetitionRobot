@@ -6,12 +6,14 @@ import static frc.robot.Constants.RobotDevices.*;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Voltage;
 import frc.robot.Constants;
 import frc.robot.util.RBSIEnum.CTREPro;
 
@@ -32,26 +34,33 @@ public class IntakeIOTalonFX implements IntakeIO {
     }
   }
 
-  private final TalonFX roller;
-  private final TalonFX extender;
+  private final TalonFX roller =
+      new TalonFX(IntakeRoller.getDeviceNumber(), IntakeRoller.getCANBus());
+  private final TalonFX extender =
+      new TalonFX(IntakeExtender.getDeviceNumber(), IntakeExtender.getCANBus());
   private final VoltageOut voltageRequest = new VoltageOut(9);
   private final VoltageOut voltageRequestOne = new VoltageOut(1.5);
   private final VoltageOut voltageRequestTwo = new VoltageOut(-1.5);
-  private MotionMagicVoltage motionMagicRequest;
   public final int[] powerPorts = {IntakeRoller.getPowerPort(), IntakeExtender.getPowerPort()};
 
   private final TalonFXConfiguration config = new TalonFXConfiguration();
   private final TalonFXConfiguration secondConfig = new TalonFXConfiguration();
   private final boolean isCTREPro = (Constants.getPhoenixPro() == CTREPro.LICENSED);
 
-  private final StatusSignal<Current> supplyCurrentAmps;
+  private final StatusSignal<Angle> rollerPosition = roller.getPosition();
+  private final StatusSignal<AngularVelocity> rollerVelocity = roller.getVelocity();
+  private final StatusSignal<Voltage> rollerAppliedVolts = roller.getMotorVoltage();
+  private final StatusSignal<Current> rollerCurrent = roller.getSupplyCurrent();
+
+  private final StatusSignal<Angle> extenderPosition = extender.getPosition();
+  private final StatusSignal<AngularVelocity> extenderVelocity = extender.getVelocity();
+  private final StatusSignal<Voltage> extenderAppliedVolts = extender.getMotorVoltage();
+  private final StatusSignal<Current> extenderCurrent = extender.getSupplyCurrent();
 
   // private static final AngularVelocity kMaxPivotSpeed =
   // KrakenX60.kFreeSpeed.div(kPivotReduction);
 
   public IntakeIOTalonFX() {
-    roller = new TalonFX(IntakeRoller.getDeviceNumber(), IntakeRoller.getCANBus());
-    extender = new TalonFX(IntakeExtender.getDeviceNumber(), IntakeExtender.getCANBus());
 
     config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     config.CurrentLimits.StatorCurrentLimit = 40;
@@ -74,15 +83,26 @@ public class IntakeIOTalonFX implements IntakeIO {
     secondConfig.MotionMagic.MotionMagicAcceleration = 50; // tune it
 
     extender.getConfigurator().apply(secondConfig);
-
-    supplyCurrentAmps = extender.getSupplyCurrent();
   }
 
   @Override
-  public void updateInputs(IntakeIOInputs inputs) {
-    boolean connected = BaseStatusSignal.refreshAll(supplyCurrentAmps).isOK();
-    inputs.supplyCurrent =
-        new double[] {supplyCurrentAmps.getValueAsDouble(), supplyCurrentAmps.getValueAsDouble()};
+  public void updateInputsRoller(IntakeIOInputs inputs) {
+    BaseStatusSignal.refreshAll(
+        rollerPosition, rollerVelocity, extenderAppliedVolts, extenderCurrent);
+    inputs.positionRad = Units.rotationsToRadians(rollerPosition.getValueAsDouble());
+    inputs.velocityRadPerSec = Units.rotationsToRadians(rollerVelocity.getValueAsDouble());
+    inputs.appliedVolts = rollerAppliedVolts.getValueAsDouble();
+    inputs.currentAmps = new double[] {rollerCurrent.getValueAsDouble()};
+  }
+
+  @Override
+  public void updateInputsExtender(IntakeIOInputs inputs) {
+    BaseStatusSignal.refreshAll(
+        extenderPosition, extenderVelocity, extenderAppliedVolts, extenderCurrent);
+    inputs.extenderpositionRad = Units.rotationsToRadians(extenderPosition.getValueAsDouble());
+    inputs.extendervelocityRadPerSec = Units.rotationsToRadians(extenderVelocity.getValueAsDouble());
+    inputs.extenderappliedVolts = extenderAppliedVolts.getValueAsDouble();
+    inputs.currentAmps = new double[] {extenderCurrent.getValueAsDouble()};
   }
 
   @Override

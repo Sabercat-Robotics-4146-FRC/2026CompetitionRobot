@@ -7,14 +7,12 @@ import frc.robot.commands.Shooter.SpinUpCommand;
 import frc.robot.subsystems.kicker.Kicker;
 import frc.robot.subsystems.shooter.Shooter;
 
-
 public class ShootCommand extends SequentialCommandGroup {
 
   public ShootCommand(Kicker kicker, Shooter shooter) {
     addCommands(
-      new SpinUpCommand(shooter),
-      new WaitUntilCommand(() -> shooter.isAtSetpoint()),
-      new KickCommand(kicker)
-    );
+        new SpinUpCommand(shooter),
+        new WaitUntilCommand(() -> shooter.isAtSetpoint()),
+        new KickCommand(kicker));
   }
 }

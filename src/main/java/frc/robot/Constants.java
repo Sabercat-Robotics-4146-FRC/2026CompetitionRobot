@@ -111,7 +111,7 @@ public final class Constants {
   /** Physical Constants for Robot Operation ******************************* */
   public static final class RobotConstants {
 
-    public static final Mass kRobotMass = Pounds.of(115);
+    public static final Mass kRobotMass = Pounds.of(117);
     public static final Matter kChassis =
         new Matter(new Translation3d(0, 0, Inches.of(8).in(Meters)), kRobotMass.in(Kilograms));
     // Robot moment of intertial; this can be obtained from a CAD model of your drivetrain. Usually,
@@ -256,9 +256,9 @@ public final class Constants {
     // TODO: power port
     public static final RobotDeviceId TURRET = new RobotDeviceId(21, CANBuses.DRIVE, 10);
 
-    public static final RobotDeviceId SHOOTER = new RobotDeviceId(22, CANBuses.RIO, 10);
+    public static final RobotDeviceId SHOOTER = new RobotDeviceId(22, CANBuses.DRIVE, 10);
 
-    public static final RobotDeviceId Kicker = new RobotDeviceId(23, CANBuses.RIO, 9);
+    public static final RobotDeviceId Kicker = new RobotDeviceId(23, CANBuses.DRIVE, 9);
 
     /* BEAM BREAK and/or LIMIT SWITCH DIO CHANNELS */
     // This is where digital I/O feedback devices are defined

@@ -1,20 +1,19 @@
-package frc.robot.commands;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-public class RunIntake extends Command {
-
+public class StopIntake extends Command {
   private final Intake intake;
 
-  public RunIntake(Intake intake) {
+  public StopIntake(Intake intake) {
     this.intake = intake;
     addRequirements(intake);
   }
 
   @Override
   public void execute() {
-    intake.runIntake();
+    intake.stopIntake();
     System.out.println("first");
   }
 
