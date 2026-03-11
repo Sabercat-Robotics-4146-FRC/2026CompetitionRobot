@@ -507,10 +507,10 @@ public final class Constants {
       new CameraConfig(
           "ClimbCam",
           new Transform3d(
-              Inches.of(7.259),
-              Inches.of(12.661),
+              Inches.of(-12.661),
+              Inches.of(-7.259),
               Inches.of(9.778),
-              new Rotation3d(Math.toRadians(0), Math.toRadians(-22.5), Math.toRadians(205))),
+              new Rotation3d(Math.toRadians(-10), Math.toRadians(-20), Math.toRadians(-155))),
           1.0,
           new SimCameraProperties() {
             {
