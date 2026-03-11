@@ -1,0 +1,84 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Consistancy Test.path
+        "x": 3.6543060498220648,
+        "y": 5.632740213523132
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.793570581257415,
+        "y": 6.2352550415183865
+=======
+        "x": 3.568232502965599,
+        "y": 5.492870699881376
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.782811387900357,
+        "y": 5.406797153024911
+>>>>>>> 0344c55 (updated vendor dependencies):src/main/deploy/pathplanner/paths/Path 1.path
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Consistancy Test.path
+        "x": 1.1151364175563472,
+        "y": 5.944756820877817
+      },
+      "prevControl": {
+        "x": 1.8144839857651252,
+        "y": 6.127663107947805
+=======
+        "x": 2.8366073546856474,
+        "y": 4.212526690391459
+      },
+      "prevControl": {
+        "x": 2.3847212336892056,
+        "y": 5.073262158956108
+>>>>>>> 0344c55 (updated vendor dependencies):src/main/deploy/pathplanner/paths/Path 1.path
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Consistancy Test.path
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+=======
+    "maxVelocity": 0.5,
+    "maxAcceleration": 0.25,
+    "maxAngularVelocity": 100.0,
+    "maxAngularAcceleration": 50.0,
+>>>>>>> 0344c55 (updated vendor dependencies):src/main/deploy/pathplanner/paths/Path 1.path
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+<<<<<<< HEAD:src/main/deploy/pathplanner/paths/Consistancy Test.path
+    "rotation": 180.0
+=======
+    "rotation": -19.653824058053342
+>>>>>>> 0344c55 (updated vendor dependencies):src/main/deploy/pathplanner/paths/Path 1.path
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

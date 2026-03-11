@@ -289,13 +289,13 @@ public final class Constants {
     // For Profiled PID Motion -- NEED TUNING!
     // Used in a variety of contexts, including PathPlanner and AutoPilot
     // Chassis (not module) across-the-field strafing motion
-    public static final double kPStrafe = 5.0;
+    public static final double kPStrafe = 0;
     public static final double kIStrafe = 0.0;
     public static final double kDStrafe = 0.0;
     // Chassis (not module) solid-body rotation
-    public static final double kPSPin = 5.0;
+    public static final double kPSPin = 0.0;
     public static final double kISPin = 0.0;
-    public static final double kDSpin = 0.0;
+    public static final double kDSpin = 0.1;
 
     // Hold time on motor brakes when disabled
     public static final double kWheelLockTime = 10; // seconds
@@ -486,13 +486,31 @@ public final class Constants {
     // (ONLY USED FOR PHOTONVISION -- Limelight: configure in web UI instead)
     // Example Cameras are mounted in the back corners, 18" up from the floor, facing sideways
     public static final CameraConfig[] ALL = {
+      /*new CameraConfig(
+      "TurretCam",
+      new Transform3d(
+          Inches.of(0.973),
+          Inches.of(5.075),
+          Inches.of(5.478),
+          new Rotation3d(Math.toRadians(0.0), Math.toRadians(115), Math.toRadians(180))),
+      1.0,
+      new SimCameraProperties() {
+        {
+          setCalibration(1280, 800, Rotation2d.fromDegrees(120));
+          setCalibError(0.25, 0.08);
+          setFPS(30);
+          setAvgLatencyMs(20);
+          setLatencyStdDevMs(5);
+        }
+      }),*/
+      //
       new CameraConfig(
-          "camera_0",
+          "ClimbCam",
           new Transform3d(
-              Inches.of(4.5),
-              Inches.of(-14.85),
-              Inches.of(25),
-              new Rotation3d(Math.toRadians(0.0), Math.toRadians(-16), Math.toRadians(-180))),
+              Inches.of(-12.661),
+              Inches.of(-7.259),
+              Inches.of(9.778),
+              new Rotation3d(Math.toRadians(-10), Math.toRadians(-20), Math.toRadians(-155))),
           1.0,
           new SimCameraProperties() {
             {
@@ -503,14 +521,30 @@ public final class Constants {
               setLatencyStdDevMs(5);
             }
           }),
-      //
       new CameraConfig(
-          "camera_1",
+          "TrenchCam",
           new Transform3d(
-              Inches.of(4.5),
-              Inches.of(14.9),
-              Inches.of(21),
-              new Rotation3d(Math.toRadians(-6), Math.toRadians(6), 0.0)),
+              Inches.of(-12.393),
+              Inches.of(-2.4),
+              Inches.of(4.986),
+              new Rotation3d(Math.toRadians(90), Math.toRadians(-50), Math.toRadians(180))),
+          1.0,
+          new SimCameraProperties() {
+            {
+              setCalibration(1280, 800, Rotation2d.fromDegrees(120));
+              setCalibError(0.25, 0.08);
+              setFPS(30);
+              setAvgLatencyMs(20);
+              setLatencyStdDevMs(5);
+            }
+          }),
+      new CameraConfig(
+          "HubCam",
+          new Transform3d(
+              Inches.of(4.239),
+              Inches.of(-7.964),
+              Inches.of(17.548),
+              new Rotation3d(Math.toRadians(270), Math.toRadians(-35), Math.toRadians(180))),
           1.0,
           new SimCameraProperties() {
             {
