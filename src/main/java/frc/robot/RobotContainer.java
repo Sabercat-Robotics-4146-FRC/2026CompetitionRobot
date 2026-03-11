@@ -41,6 +41,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Intake.PivotCommand;
 import frc.robot.commands.Intake.RunIntake;
 import frc.robot.commands.Intake.StopIntake;
+import frc.robot.commands.Kicker.KickCommand;
 import frc.robot.subsystems.accelerometer.Accelerometer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveConstants;
@@ -416,7 +417,7 @@ public class RobotContainer {
                 () -> {
                   m_Turret.setState(TurretState.AUTO);
                 }));
-    // driverController.x().onTrue(new KickCommand(m_kicker));
+    driverController.x().onTrue(new KickCommand(m_kicker));
 
     // Press X button --> Stop with wheels in X-Lock position
     // driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));

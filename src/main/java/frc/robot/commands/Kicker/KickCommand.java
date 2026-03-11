@@ -14,7 +14,7 @@ public class KickCommand extends Command {
 
   @Override
   public void execute() {
-    kicker.runVolts(2);
+    kicker.runVolts(4);
   }
 
   @Override
