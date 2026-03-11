@@ -404,6 +404,17 @@ public final class Constants {
     public static final double kDsim = 0.0;
   }
 
+  public static final class KickerConstants {
+
+    // Mechanism idle mode
+    public static final MotorIdleMode kKickerIdleMode = MotorIdleMode.BRAKE; // BRAKE, COAST
+
+    // Flywheel motor open-loop and closed-loop ramp periods for current smoothing
+    //   Time from from 0 -> full duty
+    public static final double kKickerClosedLoopRampPeriod = 0.15; // seconds
+    public static final double kKickerOpenLoopRampPeriod = 0.25; // seconds
+  }
+
   /************************************************************************* */
   /** Place Other Mechanism Constant Classes Here ************************** */
   // public static class Mechanism1Constants {}

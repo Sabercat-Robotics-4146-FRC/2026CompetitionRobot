@@ -11,9 +11,7 @@ public class KickerCommand extends Command {
     this.kicker = kicker;
   }
 
-  public void execute() {
-    kicker.setVoltage();
-  }
+  public void execute() {}
 
   public void end(boolean interrupted) {
     kicker.stop();

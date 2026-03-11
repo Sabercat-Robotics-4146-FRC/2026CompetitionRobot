@@ -11,12 +11,11 @@ package frc.robot.subsystems.shooter;
 
 import static frc.robot.Constants.ShooterConstants.*;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import frc.robot.Constants;
 import frc.robot.util.RBSISubsystem;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -107,8 +106,9 @@ public class Shooter extends RBSISubsystem {
     shooterState = state;
   }
 
-  private double calculateTargetRPM(){
-    // TODO: Implement a function to calculate the target RPM based on distance to the target and current velocity
+  private double calculateTargetRPM() {
+    // TODO: Implement a function to calculate the target RPM based on distance to the target and
+    // current velocity
     return 0.0;
   }
 
