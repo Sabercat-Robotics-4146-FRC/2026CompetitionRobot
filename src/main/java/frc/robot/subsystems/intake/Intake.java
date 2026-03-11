@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
 
-    System.out.println("Limit Switch Retracted" + isRetracted());
-    System.out.println("Limit Switch Extended" + isExtended());
+    // System.out.println("Limit Switch Retracted" + isRetracted());
+    // System.out.println("Limit Switch Extended" + isExtended());
   }
 }

@@ -13,7 +13,7 @@ public class Climb extends SubsystemBase {
   private boolean isHomed = false;
   private final ClimbIOInputsAutoLogged inputs = new ClimbIOInputsAutoLogged();
   public double homedPosition = 0;
-  public static double hangedPosition = 100;
+  public static double hangedPosition = 30;
 
   // constructor for climb
   public Climb(ClimbIO motor) {
@@ -39,6 +39,7 @@ public class Climb extends SubsystemBase {
   // home the climb
   public void homeClimb() {
     motor.goHome();
+    motor.zeroPosition();
   }
 
   public boolean isAtHangedPosition() {
@@ -53,13 +54,12 @@ public class Climb extends SubsystemBase {
   public void extendClimb() {
     // setCoastMode();
     motor.goUp();
-    motor.setPosition();
 
     // letBrakeMode();
     // System.out.println("position" + motor.getPosition());
   }
 
-  public void stopMotor(){
+  public void stopMotor() {
     motor.stop();
   }
 

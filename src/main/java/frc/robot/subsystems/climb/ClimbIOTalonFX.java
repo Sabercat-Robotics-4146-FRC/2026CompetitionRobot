@@ -47,6 +47,28 @@ public class ClimbIOTalonFX implements ClimbIO {
     configureClimbMotor();
   }
 
+  public void configureClimbMotor() {
+    TalonFXConfiguration config = new TalonFXConfiguration();
+
+    // pid gains
+    config.Slot0.kP = 0.5; // tune this
+    config.Slot0.kI = 0;
+    config.Slot0.kD = 0.2;
+
+    // Feedforward (helps shooter reach speed faster)
+    config.Slot0.kS = 0.1; // static friction
+    config.Slot0.kV = 0.1; // velocity gain
+    config.Slot0.kG = 4;
+
+    config.CurrentLimits.SupplyCurrentLimit = 40;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+    // config.MotionMagic.MotionMagicCruiseVelocity = 200; // tune it
+    // config.MotionMagic.MotionMagicAcceleration = 100; // tune it
+
+    climbMotor.getConfigurator().apply(config);
+  }
+
   @Override
   public void updateInputs(ClimbIOInputs inputs) {
     BaseStatusSignal.refreshAll(position, velocity, appliedVolts, current);
@@ -78,43 +100,26 @@ public class ClimbIOTalonFX implements ClimbIO {
     setMode(true);
   }
 
-  public void configureClimbMotor() {
-    TalonFXConfiguration config = new TalonFXConfiguration();
-
-    // pid gains
-    config.Slot0.kP = 0.5; // tune this
-    config.Slot0.kI = 0;
-    config.Slot0.kD = 0.2;
-
-    // Feedforward (helps shooter reach speed faster)
-    config.Slot0.kS = 0.1; // static friction
-    config.Slot0.kV = 0.1; // velocity gain
-    config.Slot0.kG = 4;
-
-    config.CurrentLimits.SupplyCurrentLimit = 40;
-    config.CurrentLimits.SupplyCurrentLimitEnable = true;
-
-    // config.MotionMagic.MotionMagicCruiseVelocity = 200; // tune it
-    // config.MotionMagic.MotionMagicAcceleration = 100; // tune it
-
-    climbMotor.getConfigurator().apply(config);
-  }
+  
 
   @Override
   public void goUp() {
 
-    climbMotor.setControl(voltageRequest.withOutput(6));
+    climbMotor.setControl(voltageRequest.withOutput(-3));
+    climbMotor.setControl(motionMagicVoltage.withPosition(30));
+    setMode(true);
+
     /*
     motionMagicVoltage
         .withPosition(Units.radiansToRotations(hangedPosition))
         .withFeedForward(0));*/
   }
 
+  @Override
   public void zeroPosition() {
     climbMotor.setPosition(0);
   }
 
-  
   @Override
   public void stop() {
     climbMotor.stopMotor();

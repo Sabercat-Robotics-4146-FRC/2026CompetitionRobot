@@ -28,6 +28,8 @@ public interface ClimbIO extends RBSIIO {
 
   default void setPosition() {}
 
+  default void zeroPosition() {}
+
   default void goHome() {}
 
   default double getPosition() {

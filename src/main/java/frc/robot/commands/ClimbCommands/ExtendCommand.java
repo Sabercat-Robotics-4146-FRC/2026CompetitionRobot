@@ -20,4 +20,9 @@ public class ExtendCommand extends Command {
   public boolean isFinished() {
     return climb.isAtHangedPosition();
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    climb.stopMotor();
+  }
 }
