@@ -21,4 +21,9 @@ public class RetractCommand extends Command {
   public boolean isFinished() {
     return climb.isHomed();
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    climb.stopMotor();
+  }
 }

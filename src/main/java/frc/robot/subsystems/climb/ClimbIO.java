@@ -26,6 +26,8 @@ public interface ClimbIO extends RBSIIO {
 
   default void setMode(boolean enabled) {}
 
+  default void setPosition() {}
+
   default void goHome() {}
 
   default double getPosition() {

@@ -12,6 +12,8 @@ public class Climb extends SubsystemBase {
   private ClimbIO motor;
   private boolean isHomed = false;
   private final ClimbIOInputsAutoLogged inputs = new ClimbIOInputsAutoLogged();
+  public double homedPosition = 0;
+  public static double hangedPosition = 100;
 
   // constructor for climb
   public Climb(ClimbIO motor) {
@@ -36,20 +38,11 @@ public class Climb extends SubsystemBase {
 
   // home the climb
   public void homeClimb() {
-    setCoastMode();
-    // if (!isHomed) {
     motor.goHome();
-    // } else {
-    //  motor.stop();
-    // }
-    // motor.zeroPosition();
-    // setBrakeMode();
-    // System.out.println("position" + motor.getPosition());
   }
 
   public boolean isAtHangedPosition() {
-    if (inputs.positionRad > ClimbIOTalonFX.hangedPosition - 2
-        && inputs.positionRad < ClimbIOTalonFX.hangedPosition + 2) {
+    if (inputs.positionRad > hangedPosition - 4 && inputs.positionRad < hangedPosition + 4) {
       return true;
     } else {
       return false;
@@ -59,11 +52,15 @@ public class Climb extends SubsystemBase {
   // release climb all the way up
   public void extendClimb() {
     // setCoastMode();
-    if (!isAtHangedPosition()) {
-      motor.goUp();
-    }
+    motor.goUp();
+    motor.setPosition();
+
     // letBrakeMode();
     // System.out.println("position" + motor.getPosition());
+  }
+
+  public void stopMotor(){
+    motor.stop();
   }
 
   public void periodic() {

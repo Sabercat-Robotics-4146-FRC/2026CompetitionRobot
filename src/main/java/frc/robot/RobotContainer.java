@@ -37,7 +37,6 @@ import frc.robot.Constants.Cameras;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AutopilotCommands;
-import frc.robot.commands.ClimbCommands.HangCommand;
 import frc.robot.commands.ClimbCommands.RetractCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.PivotCommand;

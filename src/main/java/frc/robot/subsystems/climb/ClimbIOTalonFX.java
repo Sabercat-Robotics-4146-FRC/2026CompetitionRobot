@@ -23,11 +23,10 @@ public class ClimbIOTalonFX implements ClimbIO {
   private static final LoggedTunableNumber kS = new LoggedTunableNumber("Climb/kS", 0.55);
   private static final LoggedTunableNumber kV = new LoggedTunableNumber("Climb/kV", 0.55);
 
-  public double homedPosition = 0;
-  public static double hangedPosition = 100; // needs tuning these are encoder values
+  // needs tuning these are encoder values
   public double voltage;
   private TalonFX climbMotor;
-  private final VoltageOut voltageRequest = new VoltageOut(voltage);
+  private final VoltageOut voltageRequest = new VoltageOut(0);
   private final MotionMagicVoltage motionMagicVoltage = new MotionMagicVoltage(0.0);
 
   private StatusSignal<Angle> position;
@@ -63,13 +62,19 @@ public class ClimbIOTalonFX implements ClimbIO {
   }
 
   @Override
+  public void setPosition() {
+    climbMotor.setControl(motionMagicVoltage.withPosition(29));
+  }
+
+  @Override
   public void setMode(boolean mode) {
     climbMotor.setNeutralMode(mode ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
   @Override
   public void goHome() {
-    climbMotor.setControl(new VoltageOut(9));
+    climbMotor.setControl(voltageRequest.withOutput(5));
+    climbMotor.setControl(motionMagicVoltage.withPosition(0));
     setMode(true);
   }
 
@@ -84,6 +89,7 @@ public class ClimbIOTalonFX implements ClimbIO {
     // Feedforward (helps shooter reach speed faster)
     config.Slot0.kS = 0.1; // static friction
     config.Slot0.kV = 0.1; // velocity gain
+    config.Slot0.kG = 4;
 
     config.CurrentLimits.SupplyCurrentLimit = 40;
     config.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -97,7 +103,7 @@ public class ClimbIOTalonFX implements ClimbIO {
   @Override
   public void goUp() {
 
-    climbMotor.setControl(new VoltageOut(-2));
+    climbMotor.setControl(voltageRequest.withOutput(6));
     /*
     motionMagicVoltage
         .withPosition(Units.radiansToRotations(hangedPosition))
@@ -108,6 +114,7 @@ public class ClimbIOTalonFX implements ClimbIO {
     climbMotor.setPosition(0);
   }
 
+  
   @Override
   public void stop() {
     climbMotor.stopMotor();
