@@ -472,6 +472,20 @@ public final class Constants {
 
     // add ramp rates later
 
+    public static final Pose3d kHubTargetRed =
+        new Pose3d(
+            new Translation3d(
+                Units.inchesToMeters(469.11),
+                Units.inchesToMeters(158.84),
+                Units.inchesToMeters(44.25)),
+            new Rotation3d(0, 0, 0));
+    public static final Pose3d kHubTargetBlue =
+        new Pose3d(
+            new Translation3d(
+                Units.inchesToMeters(182.11),
+                Units.inchesToMeters(158.84),
+                Units.inchesToMeters(44.25)),
+            new Rotation3d(0, 0, 0));
   }
 
   /************************************************************************* */

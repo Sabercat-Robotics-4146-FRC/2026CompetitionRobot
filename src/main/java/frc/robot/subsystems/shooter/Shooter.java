@@ -12,7 +12,11 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.Constants.ShooterConstants.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
 import frc.robot.util.RBSISubsystem;
 import java.util.function.Supplier;
@@ -32,6 +36,7 @@ public class Shooter extends RBSISubsystem {
   public ShooterState shooterState = ShooterState.IDLE;
 
   private final Supplier<Pose2d> pose;
+  private Pose3d hubTarget;
 
   /** Creates a new Shooter. */
   public Shooter(ShooterIO io, Supplier<Pose2d> posesSupplier) {
@@ -52,6 +57,12 @@ public class Shooter extends RBSISubsystem {
         io.configureGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         break;
     }
+
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+      hubTarget = kHubTargetRed;
+    } else {
+      hubTarget = kHubTargetBlue;
+    }
   }
 
   /** Periodic function -- inherits timing logic from RBSISubsystem */
@@ -70,6 +81,8 @@ public class Shooter extends RBSISubsystem {
     if (shooterState == ShooterState.OVERRIDE) {
       runVelocity(maxVelocity);
     }
+
+    Logger.recordOutput("Shooter/DistanceToHub", getDistanceToTarget());
   }
 
   /** Run open loop at the specified voltage. */
@@ -104,6 +117,14 @@ public class Shooter extends RBSISubsystem {
 
   public void setShooterState(ShooterState state) {
     shooterState = state;
+  }
+
+  private static final Transform2d ROBOT_TO_SHOOTER =
+      new Transform2d(Units.inchesToMeters(-5.25), 0.0, new Rotation2d());
+
+  public double getDistanceToTarget() {
+    Pose2d shooterPose = pose.get().plus(ROBOT_TO_SHOOTER);
+    return shooterPose.getTranslation().getDistance(hubTarget.toPose2d().getTranslation());
   }
 
   private double calculateTargetRPM() {
