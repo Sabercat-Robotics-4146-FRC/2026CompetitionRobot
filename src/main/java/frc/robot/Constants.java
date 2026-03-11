@@ -25,11 +25,13 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.therekrab.autopilot.APConstraints;
 import com.therekrab.autopilot.APProfile;
 import com.therekrab.autopilot.Autopilot;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Mass;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -161,6 +163,37 @@ public final class Constants {
     public static final double kVoltageCritical = 6.5;
   }
 
+  public static final class TurretConstants {
+    public static MotorIdleMode kTurretIdleMode = MotorIdleMode.BRAKE;
+    public static int kRightLimitDIOChannel = 0;
+    public static int kLeftLimitDIOChannel = 1;
+
+    public static double kTurretGearRatio = 10.0;
+
+    public static final double kTurretClosedLoopRampPeriod = 0.15; // seconds
+    public static final double kTurretOpenLoopRampPeriod = 0.25; // seconds
+
+    public static final String kTurretCamName = "TurretCam";
+    public static final Transform3d kTurretToCam =
+        new Transform3d(
+            new Translation3d(0.0, Units.inchesToMeters(4.5), 0.0),
+            new Rotation3d(0, Units.degreesToRadians(-40), 0));
+    public static final Pose3d kHubTargetRed =
+        new Pose3d(
+            new Translation3d(
+                Units.inchesToMeters(469.11),
+                Units.inchesToMeters(158.84),
+                Units.inchesToMeters(44.25)),
+            new Rotation3d(0, 0, 0));
+    public static final Pose3d kHubTargetBlue =
+        new Pose3d(
+            new Translation3d(
+                Units.inchesToMeters(182.11),
+                Units.inchesToMeters(158.84),
+                Units.inchesToMeters(44.25)),
+            new Rotation3d(0, 0, 0));
+  }
+
   /************************************************************************* */
   /** List of Robot CAN Busses ********************************************* */
   public static final class CANBuses {
@@ -219,6 +252,9 @@ public final class Constants {
     // intake
     public static final RobotDeviceId IntakeRoller = new RobotDeviceId(25, CANBuses.DRIVE, 3);
     public static final RobotDeviceId IntakeExtender = new RobotDeviceId(26, CANBuses.DRIVE, 9);
+
+    // TODO: power port
+    public static final RobotDeviceId TURRET = new RobotDeviceId(21, CANBuses.DRIVE, 10);
 
     /* BEAM BREAK and/or LIMIT SWITCH DIO CHANNELS */
     // This is where digital I/O feedback devices are defined
