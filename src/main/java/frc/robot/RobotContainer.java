@@ -416,9 +416,10 @@ public class RobotContainer {
                 () -> {
                   m_Turret.setState(TurretState.AUTO);
                 }));
+    // driverController.x().onTrue(new KickCommand(m_kicker));
 
     // Press X button --> Stop with wheels in X-Lock position
-    //driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));
+    // driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));
 
     // Press Y button --> Manually Re-Zero the Gyro
     // driverController

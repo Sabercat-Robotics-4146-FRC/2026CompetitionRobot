@@ -38,7 +38,7 @@ public class IntakeIOTalonFX implements IntakeIO {
       new TalonFX(IntakeRoller.getDeviceNumber(), IntakeRoller.getCANBus());
   private final TalonFX extender =
       new TalonFX(IntakeExtender.getDeviceNumber(), IntakeExtender.getCANBus());
-  private final VoltageOut voltageRequest = new VoltageOut(9);
+  private final VoltageOut voltageRequest = new VoltageOut(12);
   private final VoltageOut voltageRequestOne = new VoltageOut(1.5);
   private final VoltageOut voltageRequestTwo = new VoltageOut(-1.5);
   public final int[] powerPorts = {IntakeRoller.getPowerPort(), IntakeExtender.getPowerPort()};
@@ -100,7 +100,8 @@ public class IntakeIOTalonFX implements IntakeIO {
     BaseStatusSignal.refreshAll(
         extenderPosition, extenderVelocity, extenderAppliedVolts, extenderCurrent);
     inputs.extenderpositionRad = Units.rotationsToRadians(extenderPosition.getValueAsDouble());
-    inputs.extendervelocityRadPerSec = Units.rotationsToRadians(extenderVelocity.getValueAsDouble());
+    inputs.extendervelocityRadPerSec =
+        Units.rotationsToRadians(extenderVelocity.getValueAsDouble());
     inputs.extenderappliedVolts = extenderAppliedVolts.getValueAsDouble();
     inputs.currentAmps = new double[] {extenderCurrent.getValueAsDouble()};
   }

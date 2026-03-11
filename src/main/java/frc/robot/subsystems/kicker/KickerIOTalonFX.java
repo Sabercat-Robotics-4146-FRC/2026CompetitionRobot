@@ -18,7 +18,7 @@ import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
@@ -45,6 +45,8 @@ public class KickerIOTalonFX implements KickerIO {
 
   private final TalonFXConfiguration config = new TalonFXConfiguration();
   private final boolean isCTREPro = Constants.getPhoenixPro() == CTREPro.LICENSED;
+
+  private final VoltageOut voltageRequest = new VoltageOut(0);
 
   public KickerIOTalonFX() {
     config.CurrentLimits.SupplyCurrentLimit = PowerConstants.kMotorPortMaxCurrent;
@@ -90,9 +92,11 @@ public class KickerIOTalonFX implements KickerIO {
 
   @Override
   public void setVoltage(double volts) {
-    final MotionMagicVoltage m_request = new MotionMagicVoltage(volts);
+    motor.setControl(voltageRequest.withOutput(volts));
+
+    /*final MotionMagicVoltage m_request = new MotionMagicVoltage(volts);
     m_request.withEnableFOC(isCTREPro);
-    motor.setControl(m_request);
+    motor.setControl(m_request);*/
   }
 
   @Override

@@ -54,7 +54,7 @@ public class Intake extends RBSISubsystem {
   @Override
   protected void rbsiPeriodic() {
     io.updateInputsRoller(inputs);
-     io.updateInputsExtender(inputs);
+    io.updateInputsExtender(inputs);
     Logger.processInputs("Intake", inputs);
   }
 }

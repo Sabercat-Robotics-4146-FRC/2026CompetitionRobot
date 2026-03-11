@@ -65,6 +65,7 @@ public class Drive extends RBSISubsystem {
   private final SysIdRoutine sysId;
   private final Alert gyroDisconnectedAlert =
       new Alert("Disconnected gyro, using kinematics as fallback.", AlertType.kError);
+  private static final double kImuForwardOffsetMeters = 0.0254;
 
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(getModuleTranslations());
   private SwerveModulePosition[] lastModulePositions = // For delta tracking
@@ -265,10 +266,16 @@ public class Drive extends RBSISubsystem {
                 : imuInputs.yawPositionRad;
 
         // Boundary conversion: PoseEstimator requires Rotation2d
-        final Rotation2d yaw = Rotation2d.fromRadians(yawRad);
+        // final Rotation2d yaw = Rotation2d.fromRadians(yawRad);
+        Pose2d imuPose =
+            new Pose2d(
+                -kImuForwardOffsetMeters
+                    * Math.cos(yawRad), // offset pigeon rotation calculations by 1 inch
+                -kImuForwardOffsetMeters * Math.sin(yawRad),
+                Rotation2d.fromRadians(yawRad));
 
         // Apply to pose estimator
-        m_PoseEstimator.updateWithTime(sampleTimestamps[i], yaw, modulePositions);
+        m_PoseEstimator.updateWithTime(sampleTimestamps[i], imuPose.getRotation(), modulePositions);
       }
 
       Logger.recordOutput("Drive/Pose", m_PoseEstimator.getEstimatedPosition());

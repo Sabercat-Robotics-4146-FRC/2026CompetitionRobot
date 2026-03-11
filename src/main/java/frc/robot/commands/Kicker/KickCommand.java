@@ -7,15 +7,24 @@ public class KickCommand extends Command {
 
   private final Kicker kicker;
 
-  public KickCommand(Kicker k) {
-    this.kicker = k;
+  public KickCommand(Kicker kicker) {
+    this.kicker = kicker;
+    addRequirements(kicker);
   }
 
   @Override
   public void execute() {
-    kicker.runVolts(3);
+    kicker.runVolts(2);
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public boolean isFinished() {
+    return true;
+  }
+
+  /*
+  @Override
+  public void end(boolean interrupted) {
+    kicker.stop();*/
+
 }

@@ -581,10 +581,10 @@ public final class Constants {
       new CameraConfig(
           "ClimbCam",
           new Transform3d(
-              Inches.of(-12.661),
+              Inches.of(-11.661),
               Inches.of(-7.259),
               Inches.of(9.778),
-              new Rotation3d(Math.toRadians(-10), Math.toRadians(-20), Math.toRadians(-155))),
+              new Rotation3d(Math.toRadians(-5), Math.toRadians(-22.5), Math.toRadians(205))),
           1.0,
           new SimCameraProperties() {
             {
@@ -598,10 +598,10 @@ public final class Constants {
       new CameraConfig(
           "TrenchCam",
           new Transform3d(
-              Inches.of(-12.393),
+              Inches.of(-11.393),
               Inches.of(-2.4),
               Inches.of(4.986),
-              new Rotation3d(Math.toRadians(90), Math.toRadians(-50), Math.toRadians(180))),
+              new Rotation3d(Math.toRadians(-90), Math.toRadians(50), Math.toRadians(180))),
           1.0,
           new SimCameraProperties() {
             {
@@ -615,10 +615,10 @@ public final class Constants {
       new CameraConfig(
           "HubCam",
           new Transform3d(
-              Inches.of(4.239),
+              Inches.of(-3.239),
               Inches.of(-7.964),
               Inches.of(17.548),
-              new Rotation3d(Math.toRadians(270), Math.toRadians(-35), Math.toRadians(180))),
+              new Rotation3d(Math.toRadians(90), Math.toRadians(35), Math.toRadians(180))),
           1.0,
           new SimCameraProperties() {
             {
