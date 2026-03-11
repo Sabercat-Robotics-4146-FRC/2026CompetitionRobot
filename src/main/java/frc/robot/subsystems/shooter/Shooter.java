@@ -112,6 +112,10 @@ public class Shooter extends RBSISubsystem {
     return 0.0;
   }
 
+  public boolean isAtSetpoint() {
+    return Math.abs(getVelocityRPM() - calculateTargetRPM()) < 100; // TODO: Adjust threshold as needed
+  }
+
   @Override
   public int[] getPowerPorts() {
     return io.getPowerPorts();
