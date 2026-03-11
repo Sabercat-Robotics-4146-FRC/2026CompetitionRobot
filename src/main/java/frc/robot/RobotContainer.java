@@ -52,13 +52,13 @@ import frc.robot.subsystems.imu.Imu;
 import frc.robot.subsystems.imu.ImuIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIOTalonFX;
-import frc.robot.subsystems.turret.Turret;
-import frc.robot.subsystems.turret.Turret.TurretState;
-import frc.robot.subsystems.turret.TurretIOTalonFX;
 import frc.robot.subsystems.kicker.Kicker;
 import frc.robot.subsystems.kicker.KickerIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIOTalonFX;
+import frc.robot.subsystems.turret.Turret;
+import frc.robot.subsystems.turret.Turret.TurretState;
+import frc.robot.subsystems.turret.TurretIOTalonFX;
 import frc.robot.subsystems.vision.CameraSweepEvaluator;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
@@ -197,7 +197,11 @@ public class RobotContainer {
         m_imu = new Imu(SwerveConstants.kImu.factory.get());
 
         m_drivebase = new Drive(m_imu);
-        m_Turret = new Turret(new TurretIOTalonFX(), () -> m_drivebase.getFieldLinearVelocity().getX(), () -> m_drivebase.getFieldLinearVelocity().getY());
+        m_Turret =
+            new Turret(
+                new TurretIOTalonFX(),
+                () -> m_drivebase.getFieldLinearVelocity().getX(),
+                () -> m_drivebase.getFieldLinearVelocity().getY());
         m_flywheel = new Flywheel(new FlywheelIOSim()); // new Flywheel(new FlywheelIOTalonFX());
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReal(m_drivebase));
         m_accel = new Accelerometer(m_imu);
@@ -212,7 +216,11 @@ public class RobotContainer {
 
         m_imu = new Imu(new ImuIOSim());
         m_drivebase = new Drive(m_imu);
-        m_Turret = new Turret(new TurretIOTalonFX(), () -> m_drivebase.getFieldLinearVelocity().getX(), () -> m_drivebase.getFieldLinearVelocity().getY());
+        m_Turret =
+            new Turret(
+                new TurretIOTalonFX(),
+                () -> m_drivebase.getFieldLinearVelocity().getX(),
+                () -> m_drivebase.getFieldLinearVelocity().getY());
         m_flywheel = new Flywheel(new FlywheelIOSim());
         m_intake = new Intake(new IntakeIOTalonFX());
         m_kicker = new Kicker(new KickerIOTalonFX());
@@ -261,7 +269,11 @@ public class RobotContainer {
         m_vision = new Vision(m_drivebase::addVisionMeasurement, buildVisionIOsReplay());
         m_accel = new Accelerometer(m_imu);
         m_intake = new Intake(new IntakeIOTalonFX());
-        m_Turret = new Turret(new TurretIOTalonFX(), () -> m_drivebase.getFieldLinearVelocity().getX(), () -> m_drivebase.getFieldLinearVelocity().getY());
+        m_Turret =
+            new Turret(
+                new TurretIOTalonFX(),
+                () -> m_drivebase.getFieldLinearVelocity().getX(),
+                () -> m_drivebase.getFieldLinearVelocity().getY());
         m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
         sweep = null;

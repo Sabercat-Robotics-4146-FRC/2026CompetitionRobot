@@ -11,8 +11,6 @@ package frc.robot.subsystems.turret;
 
 import static frc.robot.Constants.TurretConstants.*;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -25,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldConstants;
 import frc.robot.util.RBSISubsystem;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
@@ -70,12 +69,12 @@ public class Turret extends RBSISubsystem {
   @AutoLogOutput private boolean homed = false;
 
   // Lead compensation inputs (field-relative)
-private Supplier<Double> fieldVxMps;
-private Supplier<Double> fieldVyMps;
+  private Supplier<Double> fieldVxMps;
+  private Supplier<Double> fieldVyMps;
 
-// Time-of-flight  (seconds)
-private static final double kShotTofSec = 0.30; 
-private static final double kMaxLeadMeters = 0.75; // cap compensation
+  // Time-of-flight  (seconds)
+  private static final double kShotTofSec = 0.30;
+  private static final double kMaxLeadMeters = 0.75; // cap compensation
 
   /** Creates a new turret. */
   public Turret(TurretIO io, Supplier<Double> fieldVxSupplier, Supplier<Double> fieldVySupplier) {
@@ -261,60 +260,60 @@ private static final double kMaxLeadMeters = 0.75; // cap compensation
   }
 
   public void aimAtTargetCompensated(
-    Pose3d turretPoseField,
-    Pose3d targetField,
-    boolean leftLimitPressed,
-    boolean rightLimitPressed) {
+      Pose3d turretPoseField,
+      Pose3d targetField,
+      boolean leftLimitPressed,
+      boolean rightLimitPressed) {
 
-  // --- Lead compensation ---
-  double leadX = fieldVxMps.get() * kShotTofSec;
-  double leadY = fieldVyMps.get() * kShotTofSec;
+    // --- Lead compensation ---
+    double leadX = fieldVxMps.get() * kShotTofSec;
+    double leadY = fieldVyMps.get() * kShotTofSec;
 
-  // cap lead magnitude
-  double leadMag = Math.hypot(leadX, leadY);
-  if (leadMag > kMaxLeadMeters) {
-    double scale = kMaxLeadMeters / leadMag;
-    leadX *= scale;
-    leadY *= scale;
+    // cap lead magnitude
+    double leadMag = Math.hypot(leadX, leadY);
+    if (leadMag > kMaxLeadMeters) {
+      double scale = kMaxLeadMeters / leadMag;
+      leadX *= scale;
+      leadY *= scale;
+    }
+
+    double futureTurretX = turretPoseField.getX() + leadX;
+    double futureTurretY = turretPoseField.getY() + leadY;
+
+    // 1) Desired field yaw to target (from predicted turret position)
+    double dx = targetField.getX() - futureTurretX;
+    double dy = targetField.getY() - futureTurretY;
+    double desiredFieldYaw = Math.atan2(dy, dx);
+
+    // 2) Current turret field yaw (from vision pose)
+    double turretFieldYaw = turretPoseField.getRotation().getZ();
+
+    // 3) Current turret mechanical angle (radians)
+    double currentMechRad = inputs.positionRad;
+
+    // 4) Field yaw at mechanical zero
+    double fieldYawAtZeroNow = MathUtil.angleModulus(turretFieldYaw - kMechSign * currentMechRad);
+
+    // 5) Desired mechanical setpoint
+    double desiredMechRad = kMechSign * MathUtil.angleModulus(desiredFieldYaw - fieldYawAtZeroNow);
+
+    // 6) Clamp to range
+    double clampedMechRad = MathUtil.clamp(desiredMechRad, kMinCmdRad, kMaxCmdRad);
+
+    // 7) Limit switch interlock
+    if (leftLimitPressed && clampedMechRad < currentMechRad) clampedMechRad = currentMechRad;
+    if (rightLimitPressed && clampedMechRad > currentMechRad) clampedMechRad = currentMechRad;
+
+    lastSetpointRad = clampedMechRad;
+
+    Logger.recordOutput("Turret/lastSetpointRad", lastSetpointRad);
+    Logger.recordOutput("Turret/leadX", leadX);
+    Logger.recordOutput("Turret/leadY", leadY);
+    Logger.recordOutput("Turret/futureTurretX", futureTurretX);
+    Logger.recordOutput("Turret/futureTurretY", futureTurretY);
+
+    runPosition(lastSetpointRad);
   }
-
-  double futureTurretX = turretPoseField.getX() + leadX;
-  double futureTurretY = turretPoseField.getY() + leadY;
-
-  // 1) Desired field yaw to target (from predicted turret position)
-  double dx = targetField.getX() - futureTurretX;
-  double dy = targetField.getY() - futureTurretY;
-  double desiredFieldYaw = Math.atan2(dy, dx);
-
-  // 2) Current turret field yaw (from vision pose)
-  double turretFieldYaw = turretPoseField.getRotation().getZ();
-
-  // 3) Current turret mechanical angle (radians)
-  double currentMechRad = inputs.positionRad;
-
-  // 4) Field yaw at mechanical zero
-  double fieldYawAtZeroNow = MathUtil.angleModulus(turretFieldYaw - kMechSign * currentMechRad);
-
-  // 5) Desired mechanical setpoint
-  double desiredMechRad = kMechSign * MathUtil.angleModulus(desiredFieldYaw - fieldYawAtZeroNow);
-
-  // 6) Clamp to range
-  double clampedMechRad = MathUtil.clamp(desiredMechRad, kMinCmdRad, kMaxCmdRad);
-
-  // 7) Limit switch interlock
-  if (leftLimitPressed && clampedMechRad < currentMechRad) clampedMechRad = currentMechRad;
-  if (rightLimitPressed && clampedMechRad > currentMechRad) clampedMechRad = currentMechRad;
-
-  lastSetpointRad = clampedMechRad;
-
-  Logger.recordOutput("Turret/lastSetpointRad", lastSetpointRad);
-  Logger.recordOutput("Turret/leadX", leadX);
-  Logger.recordOutput("Turret/leadY", leadY);
-  Logger.recordOutput("Turret/futureTurretX", futureTurretX);
-  Logger.recordOutput("Turret/futureTurretY", futureTurretY);
-
-  runPosition(lastSetpointRad);
-}
 
   public void setHoming(boolean state) {
     homing = state;
