@@ -176,8 +176,11 @@ public final class Constants {
     public static final String kTurretCamName = "TurretCam";
     public static final Transform3d kTurretToCam =
         new Transform3d(
-            new Translation3d(0.0, Units.inchesToMeters(4.5), 0.0),
-            new Rotation3d(0, Units.degreesToRadians(-40), 0));
+            new Translation3d(
+                Units.inchesToMeters(0.973),
+                Units.inchesToMeters(5.075),
+                Units.inchesToMeters(5.478)),
+            new Rotation3d(0, Units.degreesToRadians(-20), 0));
     public static final Pose3d kHubTargetRed =
         new Pose3d(
             new Translation3d(

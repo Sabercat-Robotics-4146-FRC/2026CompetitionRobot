@@ -40,6 +40,7 @@ import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AutopilotCommands;
 import frc.robot.commands.Composition.AutoShoot;
 import frc.robot.commands.Composition.ShootCommand;
+import frc.robot.commands.Composition.StopShootingCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Intake.PivotCommand;
 import frc.robot.subsystems.accelerometer.Accelerometer;
@@ -364,6 +365,8 @@ public class RobotContainer {
     GetJoystickValue driveStickY;
     GetJoystickValue driveStickX;
     GetJoystickValue turnStickX;
+    ShootCommand shootCommand = new ShootCommand(m_kicker, m_shooter);
+    StopShootingCommand stopShootingCommand = new StopShootingCommand(m_kicker, m_shooter);
     // OPTIONAL: Use the DashboardChooser rather than the Constants file for Drive Style
     // switch (driveStyle.get()) {
     switch (OperatorConstants.kDriveStyle) {
@@ -395,7 +398,8 @@ public class RobotContainer {
 
     // Press A button -> BRAKE
     driverController.b().onTrue(new PivotCommand(m_intake));
-    driverController.x().toggleOnTrue(new ShootCommand(m_kicker, m_shooter));
+    driverController.x().onTrue(shootCommand);
+    driverController.rightStick().onTrue(stopShootingCommand);
 
     // Press A button -> BRAKE
 

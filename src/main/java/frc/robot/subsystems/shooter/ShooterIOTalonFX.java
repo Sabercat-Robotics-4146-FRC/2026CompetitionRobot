@@ -102,7 +102,7 @@ public class ShooterIOTalonFX implements ShooterIO {
     // create a Motion Magic Velocity request, voltage output
     final MotionMagicVelocityTorqueCurrentFOC m_request =
         new MotionMagicVelocityTorqueCurrentFOC(0);
-    m_request.withAcceleration(60);
+    m_request.withAcceleration(60).withSlot(0);
     motor.setControl(m_request.withVelocity(velocityRotationsPerSecond));
   }
 

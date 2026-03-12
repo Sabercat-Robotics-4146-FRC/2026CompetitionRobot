@@ -47,7 +47,7 @@ public class Shooter extends RBSISubsystem {
     // separate robot with different tuning)
     switch (Constants.getMode()) {
       case REAL:
-        io.configureGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        io.configureGains(12.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         break;
       case REPLAY:
         io.configureGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -70,6 +70,9 @@ public class Shooter extends RBSISubsystem {
   protected void rbsiPeriodic() {
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
+    Logger.recordOutput("Shooter/State", shooterState);
+    Logger.recordOutput("Shooter/IsAtSetpoint", isAtSetpoint());
+    Logger.recordOutput("Shooter/RPS", getVelocityRPS());
 
     if (shooterState == ShooterState.IDLE) {
       stop();
@@ -131,8 +134,8 @@ public class Shooter extends RBSISubsystem {
   }
 
   public boolean isAtSetpoint() {
-    return Math.abs(getVelocityRPS() - calculateTargetRPS())
-        < 2; // TODO: Adjust threshold as needed
+    Logger.recordOutput("Shooter/SetpointDiff", Math.abs(getVelocityRPS() - calculateTargetRPS()));
+    return (Math.abs(getVelocityRPS() - calculateTargetRPS()) < 2);
   }
 
   @Override
