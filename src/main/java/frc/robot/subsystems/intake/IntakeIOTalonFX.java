@@ -19,29 +19,14 @@ import frc.robot.util.RBSIEnum.CTREPro;
 
 public class IntakeIOTalonFX implements IntakeIO {
 
-  public enum Position {
-    HOMED(5.037),
-    INTAKE(-24.8);
-
-    private final double degrees;
-
-    private Position(double degrees) {
-      this.degrees = degrees;
-    }
-
-    public Angle angle() {
-      return Degrees.of(degrees);
-    }
-  }
-
   private final TalonFX roller =
-      new TalonFX(IntakeRoller.getDeviceNumber(), IntakeRoller.getCANBus());
+      new TalonFX(INTAKE_ROLLER.getDeviceNumber(), INTAKE_ROLLER.getCANBus());
   private final TalonFX extender =
-      new TalonFX(IntakeExtender.getDeviceNumber(), IntakeExtender.getCANBus());
+      new TalonFX(INTAKE_EXTENDER.getDeviceNumber(), INTAKE_EXTENDER.getCANBus());
   private final VoltageOut voltageRequest = new VoltageOut(12);
   private final VoltageOut voltageRequestOne = new VoltageOut(1.5);
   private final VoltageOut voltageRequestTwo = new VoltageOut(-1.5);
-  public final int[] powerPorts = {IntakeRoller.getPowerPort(), IntakeExtender.getPowerPort()};
+  public final int[] powerPorts = {INTAKE_ROLLER.getPowerPort(), INTAKE_EXTENDER.getPowerPort()};
 
   private final TalonFXConfiguration config = new TalonFXConfiguration();
   private final TalonFXConfiguration secondConfig = new TalonFXConfiguration();
@@ -57,8 +42,6 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final StatusSignal<Voltage> extenderAppliedVolts = extender.getMotorVoltage();
   private final StatusSignal<Current> extenderCurrent = extender.getSupplyCurrent();
 
-  // private static final AngularVelocity kMaxPivotSpeed =
-  // KrakenX60.kFreeSpeed.div(kPivotReduction);
 
   public IntakeIOTalonFX() {
 
@@ -109,20 +92,15 @@ public class IntakeIOTalonFX implements IntakeIO {
   @Override
   public void setOutputRoller() {
     roller.setControl(voltageRequest);
-    System.out.println("third");
   }
 
   @Override
   public void setRetraction() {
-    // motionMagicRequest = new MotionMagicVoltage(5.037);
-    // extender.setControl(motionMagicRequest);
     extender.setControl(voltageRequestOne);
   }
 
   @Override
   public void setExtender() {
-    // motionMagicRequest = new MotionMagicVoltage(-29.8);
-    // extender.setControl(motionMagicRequest);
     extender.setControl(voltageRequestTwo);
   }
 
@@ -141,11 +119,8 @@ public class IntakeIOTalonFX implements IntakeIO {
     roller.stopMotor();
   }
 
-  @Override
-  public void setMode() {
-    roller.setNeutralMode(NeutralModeValue.Coast);
-  }
 
+  @Override
   public void setExtenderMode(boolean enabled) {
     extender.setNeutralMode(enabled ? NeutralModeValue.Coast : NeutralModeValue.Brake);
   }

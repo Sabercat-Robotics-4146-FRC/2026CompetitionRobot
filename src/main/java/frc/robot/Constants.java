@@ -249,16 +249,18 @@ public final class Constants {
     public static final RobotDeviceId FLYWHEEL_LEADER = new RobotDeviceId(3, CANBuses.RIO, 8);
     public static final RobotDeviceId FLYWHEEL_FOLLOWER = new RobotDeviceId(4, CANBuses.RIO, 9);
 
-    // intake
-    public static final RobotDeviceId IntakeRoller = new RobotDeviceId(25, CANBuses.DRIVE, 3);
-    public static final RobotDeviceId IntakeExtender = new RobotDeviceId(26, CANBuses.DRIVE, 9);
-
-    // TODO: power port
+    // Turret
     public static final RobotDeviceId TURRET = new RobotDeviceId(21, CANBuses.DRIVE, 10);
 
-    public static final RobotDeviceId SHOOTER = new RobotDeviceId(22, CANBuses.DRIVE, 10);
+    // Shooter
+    public static final RobotDeviceId SHOOTER = new RobotDeviceId(22, CANBuses.DRIVE, 11);
 
-    public static final RobotDeviceId Kicker = new RobotDeviceId(23, CANBuses.DRIVE, 9);
+    // Kicker
+    public static final RobotDeviceId KICKER = new RobotDeviceId(23, CANBuses.DRIVE, 9);
+
+    // Intake
+    public static final RobotDeviceId INTAKE_ROLLER = new RobotDeviceId(25, CANBuses.DRIVE, 3);
+    public static final RobotDeviceId INTAKE_EXTENDER = new RobotDeviceId(26, CANBuses.DRIVE, 9);
 
     /* BEAM BREAK and/or LIMIT SWITCH DIO CHANNELS */
     // This is where digital I/O feedback devices are defined

@@ -8,8 +8,8 @@ public class SpinUpCommand extends Command {
 
   private final Shooter shooter;
 
-  public SpinUpCommand(Shooter s) {
-    this.shooter = s;
+  public SpinUpCommand(Shooter shooter) {
+    this.shooter = shooter;
   }
 
   @Override
@@ -18,5 +18,7 @@ public class SpinUpCommand extends Command {
   }
 
   @Override
-  public void end(boolean interrupted) {}
+  public boolean isFinished(){
+    return shooter.isAtSetpoint();
+  }
 }

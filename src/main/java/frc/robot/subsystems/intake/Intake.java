@@ -15,8 +15,7 @@ public class Intake extends RBSISubsystem {
 
   public Intake(IntakeIO io) {
     this.io = io;
-    io.setMode();
-    io.setExtenderMode(false);
+    io.setExtenderMode(true);
   }
 
   // returns true if retracted
@@ -31,11 +30,11 @@ public class Intake extends RBSISubsystem {
 
   public void extendIntake() {
     io.setExtender();
+    io.setExtenderMode(false);
   }
 
   // only run intake if roller is down
   public void runIntake() {
-
     io.setOutputRoller();
   }
 
@@ -49,6 +48,7 @@ public class Intake extends RBSISubsystem {
 
   public void retractIntake() {
     io.setRetraction();
+    io.setExtenderMode(true);
   }
 
   @Override

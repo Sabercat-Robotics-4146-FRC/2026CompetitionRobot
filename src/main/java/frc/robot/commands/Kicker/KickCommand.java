@@ -19,12 +19,12 @@ public class KickCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return true;
-  }
+        return false; 
+    }
 
-  /*
-  @Override
+    @Override
   public void end(boolean interrupted) {
-    kicker.stop();*/
+        kicker.stop(); 
+    }
 
 }

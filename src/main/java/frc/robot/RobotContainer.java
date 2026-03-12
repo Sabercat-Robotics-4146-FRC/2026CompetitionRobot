@@ -18,6 +18,8 @@ import choreo.auto.AutoFactory;
 import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -37,10 +39,10 @@ import frc.robot.Constants.Cameras;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.FieldConstants.AprilTagLayoutType;
 import frc.robot.commands.AutopilotCommands;
+import frc.robot.commands.Composition.AutoShoot;
+import frc.robot.commands.Composition.ShootCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Intake.PivotCommand;
-import frc.robot.commands.Intake.RunIntake;
-import frc.robot.commands.Intake.StopIntake;
 import frc.robot.commands.Kicker.KickCommand;
 import frc.robot.subsystems.accelerometer.Accelerometer;
 import frc.robot.subsystems.drive.Drive;
@@ -283,6 +285,8 @@ public class RobotContainer {
     // NamedCommands.registerCommand("drive to pose", new AutopilotCommands(m_drivebase, new
     // Pose2d(1.115, 5.945, 180)));
 
+     NamedCommands.registerCommand("AutoShoot", new AutoShoot(m_kicker, m_shooter, m_intake));
+
     // Init all CAN busses specified in the `Constants.CANBuses` class
     RBSICANBusRegistry.initReal(Constants.CANBuses.ALL);
     canHealth = Arrays.stream(Constants.CANBuses.ALL).map(RBSICANHealth::new).toList();
@@ -386,10 +390,16 @@ public class RobotContainer {
 
     // ** Example Commands -- Remap, remove, or change as desired **
     // Press B button while driving --> ROBOT-CENTRIC
-    driverController.rightStick().whileTrue(new RunIntake(m_intake));
-    driverController.rightStick().whileFalse(new StopIntake(m_intake));
+    driverController.rightBumper()
+    .onTrue(Commands.runOnce(() -> m_intake.runIntake(), m_intake))
+    .onFalse(Commands.runOnce(() -> m_intake.stopIntake(), m_intake));
 
     // Press A button -> BRAKE
+    //driverController.b().onTrue(new PivotCommand(m_intake));
+    driverController.x().toggleOnTrue(new ShootCommand(m_kicker, m_shooter));
+
+    // Press A button -> BRAKE
+
     driverController.a().onTrue(Commands.runOnce(() -> m_Turret.Home(), m_Turret));
     driverController
         .povDown()
@@ -399,7 +409,6 @@ public class RobotContainer {
                   m_Turret.setHoming(true);
                   m_Turret.Home().schedule();
                 }));
-    driverController.a().onTrue(new PivotCommand(m_intake));
     driverController
         .povUp()
         .onTrue(
@@ -429,7 +438,8 @@ public class RobotContainer {
                 () -> {
                   m_Turret.setState(TurretState.AUTO);
                 }));
-    driverController.x().onTrue(new KickCommand(m_kicker));
+
+    //driverController.x().onTrue(new KickCommand(m_kicker));
 
     // Press X button --> Stop with wheels in X-Lock position
     // driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));
@@ -441,14 +451,6 @@ public class RobotContainer {
     //         Commands.runOnce(m_drivebase::zeroHeadingForAlliance, m_drivebase)
     //             .ignoringDisable(true));
 
-    // Press RIGHT BUMPER --> Run the example flywheel
-    driverController
-        .rightBumper()
-        .whileTrue(
-            Commands.startEnd(
-                () -> m_flywheel.runVelocity(flywheelSpeedInput.get()),
-                m_flywheel::stop,
-                m_flywheel));
 
     // Press LEFT BUMPER --> Drive to a pose 10 feet closer to the BLUE ALLIANCE wall
     driverController
@@ -473,19 +475,6 @@ public class RobotContainer {
                 },
                 Set.of(m_drivebase)));
 
-    // Press POV LEFT to nudge the robot left
-    // driverController
-    //     .povLeft()
-    //     .whileTrue(
-    //         Commands.startEnd(
-    //             () -> {
-    //               m_drivebase.runVelocity(
-    //                   new ChassisSpeeds(Units.inchesToMeters(0.), Units.inchesToMeters(11.0),
-    // 0.));
-    //             },
-    //             // Stop when command ended
-    //             m_drivebase::stop,
-    //             m_drivebase));
 
     if (Constants.getMode() == Mode.SIM) {
       // IN SIMULATION ONLY:

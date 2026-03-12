@@ -34,9 +34,9 @@ import frc.robot.util.RBSIEnum.CTREPro;
 public class KickerIOTalonFX implements KickerIO {
 
   // Define the motor / follower motors from the Ports section of RobotContainer
-  private final TalonFX motor = new TalonFX(Kicker.getDeviceNumber(), Kicker.getCANBus());
+  private final TalonFX motor = new TalonFX(KICKER.getDeviceNumber(), KICKER.getCANBus());
   // IMPORTANT: Include here all devices listed above that are part of this mechanism!
-  public final int[] powerPorts = {Kicker.getPowerPort()};
+  public final int[] powerPorts = {KICKER.getPowerPort()};
 
   private final StatusSignal<Angle> motorPosition = motor.getPosition();
   private final StatusSignal<AngularVelocity> motorVelocity = motor.getVelocity();
