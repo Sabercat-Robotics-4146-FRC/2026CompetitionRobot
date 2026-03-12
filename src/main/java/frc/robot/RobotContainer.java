@@ -44,6 +44,8 @@ import frc.robot.commands.Composition.StopShootingCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Intake.PivotCommand;
 import frc.robot.subsystems.accelerometer.Accelerometer;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveConstants;
 import frc.robot.subsystems.flywheel_example.Flywheel;
@@ -113,6 +115,8 @@ public class RobotContainer {
   private final Kicker m_kicker;
 
   private final Shooter m_shooter;
+
+  private final Climb m_climb; 
 
   // These are "Virtual Subsystems" that report information but have no motors
   private final Imu m_imu;
@@ -209,6 +213,12 @@ public class RobotContainer {
         m_intake = new Intake(new IntakeIOTalonFX());
         m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
+        m_climb = 
+            new Climb(
+                new ClimbIOTalonFX(),
+                () -> driverController.getLeftTriggerAxis(),
+                () -> driverController.getRightTriggerAxis());
+        
         sweep = null;
         break;
 
@@ -226,6 +236,11 @@ public class RobotContainer {
         m_intake = new Intake(new IntakeIOTalonFX());
         m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
+          m_climb = 
+            new Climb(
+                new ClimbIOTalonFX(),
+                () -> driverController.getLeftTriggerAxis(),
+                () -> driverController.getRightTriggerAxis());
 
         // ---------------- Vision IOs (robot code) ----------------
         var cams = frc.robot.Constants.Cameras.ALL;
@@ -277,6 +292,11 @@ public class RobotContainer {
                 () -> m_drivebase.getFieldLinearVelocity().getY());
         m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
+          m_climb = 
+            new Climb(
+                new ClimbIOTalonFX(),
+                () -> driverController.getLeftTriggerAxis(),
+                () -> driverController.getRightTriggerAxis());
         sweep = null;
         break;
     }
