@@ -75,8 +75,8 @@ public class Shooter extends RBSISubsystem {
       stop();
     }
     if (shooterState == ShooterState.SHOOTING) {
-      runVelocity(calculateTargetRPM());
-      Logger.recordOutput("Shooter/CalculatedRPM", calculateTargetRPM());
+      runVelocity(calculateTargetRPS());
+      Logger.recordOutput("Shooter/CalculatedRPS", calculateTargetRPS());
     }
     if (shooterState == ShooterState.OVERRIDE) {
       runVelocity(maxVelocity);
@@ -91,12 +91,11 @@ public class Shooter extends RBSISubsystem {
   }
 
   /** Run closed loop at the specified velocity. */
-  public void runVelocity(double velocityRPM) {
-    var velocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(velocityRPM);
-    io.setVelocity(velocityRadPerSec);
+  public void runVelocity(double velocityRPS) {
+    io.setVelocity(velocityRPS);
 
     // Log Shooter setpoint
-    Logger.recordOutput("Shooter/SetpointRPM", velocityRPM);
+    Logger.recordOutput("Shooter/SetpointRPS", velocityRPS);
   }
 
   /** Stops the shooter. */
@@ -104,10 +103,10 @@ public class Shooter extends RBSISubsystem {
     io.stop();
   }
 
-  /** Returns the current velocity in RPM. */
+  /** Returns the current velocity in RPS. */
   @AutoLogOutput(key = "Mechanism/Shooter")
-  public double getVelocityRPM() {
-    return Units.radiansPerSecondToRotationsPerMinute(inputs.velocityRadPerSec);
+  public double getVelocityRPS() {
+    return 0.0166667 * Units.radiansPerSecondToRotationsPerMinute(inputs.velocityRadPerSec);
   }
 
   /** Returns the current velocity in radians per second. */
@@ -127,15 +126,13 @@ public class Shooter extends RBSISubsystem {
     return shooterPose.getTranslation().getDistance(hubTarget.toPose2d().getTranslation());
   }
 
-  private double calculateTargetRPM() {
-    // TODO: Implement a function to calculate the target RPM based on distance to the target and
-    // current velocity
-    return 0.0;
+  private double calculateTargetRPS() {
+    return (-7.67 * getDistanceToTarget() + -52.8);
   }
 
   public boolean isAtSetpoint() {
-    return Math.abs(getVelocityRPM() - calculateTargetRPM())
-        < 100; // TODO: Adjust threshold as needed
+    return Math.abs(getVelocityRPS() - calculateTargetRPS())
+        < 2; // TODO: Adjust threshold as needed
   }
 
   @Override
