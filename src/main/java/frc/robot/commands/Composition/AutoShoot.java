@@ -10,16 +10,12 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.kicker.Kicker;
 import frc.robot.subsystems.shooter.Shooter;
 
-public class AutoShoot extends SequentialCommandGroup{
+public class AutoShoot extends SequentialCommandGroup {
 
-   public AutoShoot(Kicker kicker, Shooter shooter, Intake intake) {
+  public AutoShoot(Kicker kicker, Shooter shooter, Intake intake) {
     addCommands(
-        new ParallelCommandGroup
-        (new PivotCommand(intake), 
-        new SpinUpCommand(shooter)),
+        new ParallelCommandGroup(new PivotCommand(intake), new SpinUpCommand(shooter)),
         new WaitUntilCommand(() -> shooter.isAtSetpoint()),
-        new RunCommand(() -> kicker.runVolts(4), kicker)     
-        .withTimeout(4.0));
+        new RunCommand(() -> kicker.runVolts(4), kicker).withTimeout(4.0));
   }
-
 }

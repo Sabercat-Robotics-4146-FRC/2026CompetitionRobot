@@ -12,8 +12,7 @@ public class ShootCommand extends SequentialCommandGroup {
 
   public ShootCommand(Kicker kicker, Shooter shooter) {
     addCommands(
-        new RunCommand(() -> kicker.runVolts(-2), kicker)     
-        .withTimeout(2.0),
+        new RunCommand(() -> kicker.runVolts(-2), kicker).withTimeout(2.0),
         new SpinUpCommand(shooter),
         new WaitUntilCommand(() -> shooter.isAtSetpoint()),
         new KickCommand(kicker));

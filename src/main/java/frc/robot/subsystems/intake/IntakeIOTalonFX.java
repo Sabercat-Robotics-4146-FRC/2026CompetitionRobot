@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import static edu.wpi.first.units.Units.Degrees;
 import static frc.robot.Constants.RobotDevices.*;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -41,7 +40,6 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final StatusSignal<AngularVelocity> extenderVelocity = extender.getVelocity();
   private final StatusSignal<Voltage> extenderAppliedVolts = extender.getMotorVoltage();
   private final StatusSignal<Current> extenderCurrent = extender.getSupplyCurrent();
-
 
   public IntakeIOTalonFX() {
 
@@ -118,7 +116,6 @@ public class IntakeIOTalonFX implements IntakeIO {
   public void stopRoller() {
     roller.stopMotor();
   }
-
 
   @Override
   public void setExtenderMode(boolean enabled) {

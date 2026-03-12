@@ -19,7 +19,6 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -43,7 +42,6 @@ import frc.robot.commands.Composition.AutoShoot;
 import frc.robot.commands.Composition.ShootCommand;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.Intake.PivotCommand;
-import frc.robot.commands.Kicker.KickCommand;
 import frc.robot.subsystems.accelerometer.Accelerometer;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.SwerveConstants;
@@ -285,7 +283,7 @@ public class RobotContainer {
     // NamedCommands.registerCommand("drive to pose", new AutopilotCommands(m_drivebase, new
     // Pose2d(1.115, 5.945, 180)));
 
-     NamedCommands.registerCommand("AutoShoot", new AutoShoot(m_kicker, m_shooter, m_intake));
+    NamedCommands.registerCommand("AutoShoot", new AutoShoot(m_kicker, m_shooter, m_intake));
 
     // Init all CAN busses specified in the `Constants.CANBuses` class
     RBSICANBusRegistry.initReal(Constants.CANBuses.ALL);
@@ -390,14 +388,10 @@ public class RobotContainer {
 
     // ** Example Commands -- Remap, remove, or change as desired **
     // Press B button while driving --> ROBOT-CENTRIC
-    driverController.rightBumper()
-    .toggleOnTrue(
-        Commands.startEnd(
-            () -> m_intake.runIntake(),
-            () -> m_intake.stopIntake(),
-            m_intake
-        )
-    );
+    driverController
+        .rightBumper()
+        .toggleOnTrue(
+            Commands.startEnd(() -> m_intake.runIntake(), () -> m_intake.stopIntake(), m_intake));
 
     // Press A button -> BRAKE
     driverController.b().onTrue(new PivotCommand(m_intake));
@@ -444,7 +438,7 @@ public class RobotContainer {
                   m_Turret.setState(TurretState.AUTO);
                 }));
 
-    //driverController.x().onTrue(new KickCommand(m_kicker));
+    // driverController.x().onTrue(new KickCommand(m_kicker));
 
     // Press X button --> Stop with wheels in X-Lock position
     // driverController.x().onTrue(Commands.runOnce(m_drivebase::stopWithX, m_drivebase));
@@ -455,7 +449,6 @@ public class RobotContainer {
     //     .onTrue(
     //         Commands.runOnce(m_drivebase::zeroHeadingForAlliance, m_drivebase)
     //             .ignoringDisable(true));
-
 
     // Press LEFT BUMPER --> Drive to a pose 10 feet closer to the BLUE ALLIANCE wall
     driverController
@@ -479,7 +472,6 @@ public class RobotContainer {
                   return AutopilotCommands.runAutopilot(m_drivebase, pose);
                 },
                 Set.of(m_drivebase)));
-
 
     if (Constants.getMode() == Mode.SIM) {
       // IN SIMULATION ONLY:

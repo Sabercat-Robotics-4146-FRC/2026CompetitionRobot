@@ -18,7 +18,7 @@ public class SpinUpCommand extends Command {
   }
 
   @Override
-  public boolean isFinished(){
+  public boolean isFinished() {
     return shooter.isAtSetpoint();
   }
 }
