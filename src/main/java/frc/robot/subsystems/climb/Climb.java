@@ -9,7 +9,7 @@ import java.util.function.DoubleSupplier;
 
 public class Climb extends SubsystemBase {
 
-  private DigitalInput limitSwitch = new DigitalInput(RobotDevices.CLIMB_LIMIT_SWITCH);
+  private DigitalInput limitSwitch = new DigitalInput(4);
   private Debouncer debouncer = new Debouncer(0.05);
   private ClimbIO motor;
   private final ClimbIOInputsAutoLogged inputs = new ClimbIOInputsAutoLogged();
