@@ -391,11 +391,16 @@ public class RobotContainer {
     // ** Example Commands -- Remap, remove, or change as desired **
     // Press B button while driving --> ROBOT-CENTRIC
     driverController.rightBumper()
-    .onTrue(Commands.runOnce(() -> m_intake.runIntake(), m_intake))
-    .onFalse(Commands.runOnce(() -> m_intake.stopIntake(), m_intake));
+    .toggleOnTrue(
+        Commands.startEnd(
+            () -> m_intake.runIntake(),
+            () -> m_intake.stopIntake(),
+            m_intake
+        )
+    );
 
     // Press A button -> BRAKE
-    //driverController.b().onTrue(new PivotCommand(m_intake));
+    driverController.b().onTrue(new PivotCommand(m_intake));
     driverController.x().toggleOnTrue(new ShootCommand(m_kicker, m_shooter));
 
     // Press A button -> BRAKE
