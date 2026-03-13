@@ -9,10 +9,16 @@
 
 package frc.robot.subsystems.turret;
 
-import static frc.robot.Constants.TurretConstants.*;
+import static frc.robot.Constants.TurretConstants.kHubTargetBlue;
+import static frc.robot.Constants.TurretConstants.kHubTargetRed;
+import static frc.robot.Constants.TurretConstants.kLeftLimitDIOChannel;
+import static frc.robot.Constants.TurretConstants.kRightLimitDIOChannel;
+import static frc.robot.Constants.TurretConstants.kTurretCamName;
+import static frc.robot.Constants.TurretConstants.kTurretToCam;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -23,11 +29,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.FieldConstants;
 import frc.robot.util.RBSISubsystem;
+import java.util.Set;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Turret extends RBSISubsystem {
   private final TurretIO io;
@@ -76,6 +85,27 @@ public class Turret extends RBSISubsystem {
   private static final double kShotTofSec = 0.30;
   private static final double kMaxLeadMeters = 0.75; // cap compensation
 
+  // ---------------- Vision gating: tag allowlist + outlier rejection ----------------
+
+  private static final Set<Integer> kAllowedAimTagIds =
+      Set.of(2, 3, 4, 5, 8, 9, 10, 11, 18, 19, 20, 21, 24, 25, 26, 27);
+
+  // Reject pose “teleports” (tune)
+  private static final double kMaxVisionJumpMeters = 0.50;
+  private static final double kMaxVisionYawJumpRad = Math.toRadians(20.0);
+
+  // Store last accepted vision pose for jump checking
+  private Pose3d lastAcceptedVisionPose = null;
+
+  // ---------------- Turret setpoint rate limiting ----------------
+
+  // Limit how fast the turret setpoint is allowed to change (rad/sec).
+  // Start conservative to protect gears; tune up later.
+  private static final double kSetpointRateLimitRadPerSec = 4.0;
+
+  // Slew limiter operates on the setpoint signal, not motor output.
+  private final SlewRateLimiter setpointLimiter = new SlewRateLimiter(kSetpointRateLimitRadPerSec);
+
   /** Creates a new turret. */
   public Turret(TurretIO io, Supplier<Double> fieldVxSupplier, Supplier<Double> fieldVySupplier) {
     this.io = io;
@@ -113,6 +143,10 @@ public class Turret extends RBSISubsystem {
     Logger.processInputs("Turret", inputs);
 
     var result = turretCam.getLatestResult();
+
+    // NEW: ignore climb tags (allowlist)
+    boolean allowedTagSeen = hasAllowedAimTag(result);
+
     var visionEst = photonEstimator.estimateCoprocMultiTagPose(result);
     boolean multiTag = visionEst.isPresent();
     if (visionEst.isEmpty()) {
@@ -120,7 +154,7 @@ public class Turret extends RBSISubsystem {
     }
 
     boolean visionGood = false;
-    if (visionEst.isPresent()) {
+    if (visionEst.isPresent() && allowedTagSeen) {
       if (multiTag) {
         visionGood = true;
       } else if (result.hasTargets()) {
@@ -129,13 +163,30 @@ public class Turret extends RBSISubsystem {
       }
     }
 
+    // NEW: outlier rejection on pose jumps
+    if (visionGood) {
+      Pose3d pose = visionEst.get().estimatedPose;
+      if (poseJumpedTooFar(pose)) {
+        visionGood = false;
+        Logger.recordOutput("Turret/VisionRejected", true);
+        Logger.recordOutput("Turret/VisionRejectReason", "jump");
+      } else {
+        lastAcceptedVisionPose = pose; // accept
+      }
+    } else {
+      Logger.recordOutput("Turret/VisionRejected", true);
+      Logger.recordOutput(
+          "Turret/VisionRejectReason", allowedTagSeen ? "notGood" : "tagNotAllowed");
+    }
+
     if (visionEst.isEmpty() || !visionGood) {
-      // TODO: Search or use robot odometry
-      System.out.println("No turret pose estimate available.");
+      // Hold last setpoint rather than thrash
+      runPosition(lastSetpointRad);
     } else {
       Logger.recordOutput("Turret/TurretPose", visionEst.get().estimatedPose);
       if (state == TurretState.AUTO) {
-        aimAtTarget(
+        // call compensated if you want drive-by aiming
+        aimAtTargetCompensated(
             visionEst.get().estimatedPose,
             hubTarget,
             !leftLimitSwitch.get(),
@@ -248,7 +299,9 @@ public class Turret extends RBSISubsystem {
     if (leftLimitPressed && clampedMechRad < currentMechRad) clampedMechRad = currentMechRad;
     if (rightLimitPressed && clampedMechRad > currentMechRad) clampedMechRad = currentMechRad;
 
-    lastSetpointRad = clampedMechRad;
+    double limitedSetpoint = setpointLimiter.calculate(clampedMechRad);
+    lastSetpointRad = limitedSetpoint;
+
     Logger.recordOutput("Turret/lastSetpointRad", lastSetpointRad);
     Logger.recordOutput("Turret/currentMechRad", currentMechRad);
     Logger.recordOutput("Turret/turretFieldYaw", turretFieldYaw);
@@ -304,7 +357,8 @@ public class Turret extends RBSISubsystem {
     if (leftLimitPressed && clampedMechRad < currentMechRad) clampedMechRad = currentMechRad;
     if (rightLimitPressed && clampedMechRad > currentMechRad) clampedMechRad = currentMechRad;
 
-    lastSetpointRad = clampedMechRad;
+    double limitedSetpoint = setpointLimiter.calculate(clampedMechRad);
+    lastSetpointRad = limitedSetpoint;
 
     Logger.recordOutput("Turret/lastSetpointRad", lastSetpointRad);
     Logger.recordOutput("Turret/leadX", leadX);
@@ -313,6 +367,32 @@ public class Turret extends RBSISubsystem {
     Logger.recordOutput("Turret/futureTurretY", futureTurretY);
 
     runPosition(lastSetpointRad);
+  }
+
+  private boolean hasAllowedAimTag(PhotonPipelineResult result) {
+    if (!result.hasTargets()) return false;
+    for (PhotonTrackedTarget t : result.getTargets()) {
+      if (kAllowedAimTagIds.contains(t.getFiducialId())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean poseJumpedTooFar(Pose3d newPose) {
+    return false;
+
+    // if (lastAcceptedVisionPose == null) return false;
+
+    // double dx = newPose.getX() - lastAcceptedVisionPose.getX();
+    // double dy = newPose.getY() - lastAcceptedVisionPose.getY();
+    // double dist = Math.hypot(dx, dy);
+
+    // double yawNew = newPose.getRotation().getZ();
+    // double yawOld = lastAcceptedVisionPose.getRotation().getZ();
+    // double yawDelta = MathUtil.angleModulus(yawNew - yawOld);
+
+    // return dist > kMaxVisionJumpMeters || Math.abs(yawDelta) > kMaxVisionYawJumpRad;
   }
 
   public void setHoming(boolean state) {

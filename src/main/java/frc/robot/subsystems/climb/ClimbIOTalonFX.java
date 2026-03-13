@@ -1,4 +1,3 @@
-
 package frc.robot.subsystems.climb;
 
 import com.ctre.phoenix6.BaseStatusSignal;
