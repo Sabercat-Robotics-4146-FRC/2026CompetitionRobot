@@ -130,7 +130,7 @@ public class Shooter extends RBSISubsystem {
   }
 
   private double calculateTargetRPS() {
-    return (-7.67 * getDistanceToTarget() + -52.8);
+    return (-8 * getDistanceToTarget() + -52.8);
   }
 
   public boolean isAtSetpoint() {
