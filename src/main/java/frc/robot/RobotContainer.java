@@ -304,7 +304,7 @@ public class RobotContainer {
     // NamedCommands.registerCommand("drive to pose", new AutopilotCommands(m_drivebase, new
     // Pose2d(1.115, 5.945, 180)));
 
-    NamedCommands.registerCommand("AutoShoot", new AutoShoot(m_kicker, m_shooter, m_intake));
+    NamedCommands.registerCommand("AutoShoot", new AutoShoot(m_kicker, m_shooter, m_intake, m_Turret));
 
     // Init all CAN busses specified in the `Constants.CANBuses` class
     RBSICANBusRegistry.initReal(Constants.CANBuses.ALL);
