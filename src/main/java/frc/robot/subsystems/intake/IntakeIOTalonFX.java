@@ -23,8 +23,8 @@ public class IntakeIOTalonFX implements IntakeIO {
   private final TalonFX extender =
       new TalonFX(INTAKE_EXTENDER.getDeviceNumber(), INTAKE_EXTENDER.getCANBus());
   private final VoltageOut voltageRequest = new VoltageOut(12);
-  private final VoltageOut voltageRequestOne = new VoltageOut(1.5);
-  private final VoltageOut voltageRequestTwo = new VoltageOut(-1.5);
+  private final VoltageOut voltageRequestOne = new VoltageOut(2.5);
+  private final VoltageOut voltageRequestTwo = new VoltageOut(-2.5);
   public final int[] powerPorts = {INTAKE_ROLLER.getPowerPort(), INTAKE_EXTENDER.getPowerPort()};
 
   private final TalonFXConfiguration config = new TalonFXConfiguration();

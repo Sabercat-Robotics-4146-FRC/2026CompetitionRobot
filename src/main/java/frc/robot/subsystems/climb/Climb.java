@@ -1,10 +1,8 @@
-
- package frc.robot.subsystems.climb;
+package frc.robot.subsystems.climb;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.RobotDevices;
 import java.util.function.DoubleSupplier;
 
 public class Climb extends SubsystemBase {

@@ -116,7 +116,7 @@ public class RobotContainer {
 
   private final Shooter m_shooter;
 
-  private final Climb m_climb; 
+  private final Climb m_climb;
 
   // These are "Virtual Subsystems" that report information but have no motors
   private final Imu m_imu;
@@ -213,12 +213,12 @@ public class RobotContainer {
         m_intake = new Intake(new IntakeIOTalonFX());
         m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
-        m_climb = 
+        m_climb =
             new Climb(
                 new ClimbIOTalonFX(),
                 () -> driverController.getLeftTriggerAxis(),
                 () -> driverController.getRightTriggerAxis());
-        
+
         sweep = null;
         break;
 
@@ -236,7 +236,7 @@ public class RobotContainer {
         m_intake = new Intake(new IntakeIOTalonFX());
         m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
-          m_climb = 
+        m_climb =
             new Climb(
                 new ClimbIOTalonFX(),
                 () -> driverController.getLeftTriggerAxis(),
@@ -292,7 +292,7 @@ public class RobotContainer {
                 () -> m_drivebase.getFieldLinearVelocity().getY());
         m_kicker = new Kicker(new KickerIOTalonFX());
         m_shooter = new Shooter(new ShooterIOTalonFX(), () -> m_drivebase.getPose());
-          m_climb = 
+        m_climb =
             new Climb(
                 new ClimbIOTalonFX(),
                 () -> driverController.getLeftTriggerAxis(),

@@ -255,7 +255,7 @@ public final class Constants {
     // Turret
     public static final RobotDeviceId TURRET = new RobotDeviceId(21, CANBuses.DRIVE, 10);
 
-     public static final RobotDeviceId CLIMB_MOTOR = new RobotDeviceId(24, CANBuses.DRIVE, 10);
+    public static final RobotDeviceId CLIMB_MOTOR = new RobotDeviceId(24, CANBuses.DRIVE, 10);
     // Shooter
     public static final RobotDeviceId SHOOTER = new RobotDeviceId(22, CANBuses.DRIVE, 11);
 
